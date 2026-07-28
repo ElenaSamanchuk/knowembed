@@ -1,0 +1,21 @@
+{
+  "id": "demo-store-assistant",
+  "name": "Store Assistant",
+  "welcome": "Hi! Ask me about shipping, returns, pricing, or support hours.",
+  "themeColor": "#1d4ed8",
+  "branding": true,
+  "chunks": [
+    {
+      "id": "demo-doc-0",
+      "documentId": "demo-doc",
+      "documentName": "acme-faq.md",
+      "content": "# Acme Store — Customer FAQ\n\n## Shipping\nWe ship within the US and EU. Standard delivery takes 3–5 business days. Express shipping (1–2 days) is available at checkout for $12.\n\nOrders over $75 qualify for free standard shipping.\n\n## Returns\nYou can return unused items within 30 days of delivery. Start a return from your order confirmation email or contact support@acme.store.\n\nRefunds are processed within 5–7 business days after we receive the item.\n\n## Pricing\nStarter plan: $0 — 1 chatbot, 3 docs, 50 answers/month.\nPro plan: $29/month — 5 chatbots, 20 docs each, 2,000 answers/month, no widget branding."
+    },
+    {
+      "id": "demo-doc-1",
+      "documentId": "demo-doc",
+      "documentName": "acme-faq.md",
+      "content": "## Support hours\nLive chat and email support: Mon–Fri, 9am–6pm ET. We respond to emails within one business day."
+    }
+  ]
+}
