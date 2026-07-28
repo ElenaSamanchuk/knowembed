@@ -1,15 +1,16 @@
 import { Link, Navigate, useSearchParams } from 'react-router-dom';
 import { SiteHeader } from '../components/SiteHeader';
+import { useAuth } from '../context/AuthProvider';
 import { PLANS } from '../lib/plans';
-import { getSessionUser } from '../lib/store';
 
 export function CheckoutPage() {
   const [params] = useSearchParams();
-  const user = getSessionUser();
+  const { user, profile, loading } = useAuth();
   const planId = params.get('plan') === 'pro' ? 'pro' : 'starter';
   const plan = PLANS[planId];
 
-  if (!user) return <Navigate to="/login" replace />;
+  if (loading) return <main className="page-shell"><p className="muted">Loading…</p></main>;
+  if (!user || !profile) return <Navigate to="/login" replace />;
 
   return (
     <>
@@ -18,9 +19,7 @@ export function CheckoutPage() {
         <header className="page-heading">
           <p className="eyebrow">Stripe test checkout</p>
           <h1>Upgrade to {plan.name}</h1>
-          <p className="lead">
-            Mock billing flow for the MVP. Production: Stripe Checkout + Supabase webhooks to set plan.
-          </p>
+          <p className="lead">Mock billing flow. Your Supabase profile plan is already updated.</p>
         </header>
 
         <section className="panel-card stack checkout-card">
@@ -33,7 +32,7 @@ export function CheckoutPage() {
             <code>4242 4242 4242 4242</code>
           </div>
           <div className="checkout-success">
-            Payment simulated — your workspace is now on <strong>{plan.name}</strong>.
+            Payment simulated — your workspace is now on <strong>{profile.plan}</strong>.
           </div>
           <Link to="/app" className="btn btn-primary">
             Back to dashboard

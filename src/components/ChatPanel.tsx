@@ -1,6 +1,5 @@
 import { useEffect, useRef, useState } from 'react';
-import { composeAnswer } from '../lib/rag';
-import type { TextChunk } from '../lib/rag';
+import { chatWithBot } from '../lib/api';
 
 export type ChatMessage = {
   id: string;
@@ -9,19 +8,19 @@ export type ChatMessage = {
 };
 
 type ChatPanelProps = {
-  botName: string;
+  botId: string;
   welcome: string;
-  chunks: TextChunk[];
   disabled?: boolean;
-  onSend?: () => void;
+  onAnswered?: () => void;
 };
 
-export function ChatPanel({ botName, welcome, chunks, disabled, onSend }: ChatPanelProps) {
+export function ChatPanel({ botId, welcome, disabled, onAnswered }: ChatPanelProps) {
   const [messages, setMessages] = useState<ChatMessage[]>([
     { id: 'welcome', role: 'assistant', content: welcome },
   ]);
   const [input, setInput] = useState('');
   const [thinking, setThinking] = useState(false);
+  const [error, setError] = useState('');
   const endRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -33,21 +32,25 @@ export function ChatPanel({ botName, welcome, chunks, disabled, onSend }: ChatPa
     if (!question || disabled || thinking) return;
 
     setInput('');
+    setError('');
     setMessages((current) => [
       ...current,
       { id: crypto.randomUUID(), role: 'user', content: question },
     ]);
     setThinking(true);
-    onSend?.();
 
-    await new Promise((resolve) => window.setTimeout(resolve, 450));
-
-    const answer = composeAnswer(question, chunks, botName);
-    setMessages((current) => [
-      ...current,
-      { id: crypto.randomUUID(), role: 'assistant', content: answer },
-    ]);
-    setThinking(false);
+    try {
+      const answer = await chatWithBot(botId, question);
+      setMessages((current) => [
+        ...current,
+        { id: crypto.randomUUID(), role: 'assistant', content: answer },
+      ]);
+      onAnswered?.();
+    } catch (err) {
+      setError(err instanceof Error ? err.message : 'Chat failed');
+    } finally {
+      setThinking(false);
+    }
   };
 
   return (
@@ -58,9 +61,10 @@ export function ChatPanel({ botName, welcome, chunks, disabled, onSend }: ChatPa
             {message.content}
           </div>
         ))}
-        {thinking ? <div className="chat-bubble chat-bubble--assistant">Searching docs…</div> : null}
+        {thinking ? <div className="chat-bubble chat-bubble--assistant">Searching docs with AI…</div> : null}
         <div ref={endRef} />
       </div>
+      {error ? <p className="form-error chat-error">{error}</p> : null}
       <form
         className="chat-input-row"
         onSubmit={(event) => {

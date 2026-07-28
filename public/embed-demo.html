@@ -43,13 +43,20 @@
     <main>
       <h1>Acme Store</h1>
       <p>
-        This page simulates a customer website. The widget loads published knowledge from
-        <code>/bots/demo-store-assistant.json</code> and answers questions about shipping, returns, and pricing.
+        Embedded widget powered by Supabase Edge Functions + OpenAI. Publish
+        <code>demo-store-assistant</code> from the app, then ask about shipping or returns.
       </p>
       <div class="card">
-        <strong>Try it:</strong> open the chat in the bottom-right and ask “How long is shipping?” or “What is your return policy?”
+        <strong>Try it:</strong> open the chat in the bottom-right and ask “How long is shipping?”
       </div>
     </main>
-    <script src="./widget.js" data-bot-id="demo-store-assistant" defer></script>
+    <!-- Replace data-api and data-anon-key with your Supabase project values -->
+    <script
+      src="./widget.js"
+      data-bot-id="demo-store-assistant"
+      data-api="https://buwxmfapwampgpwvnulb.supabase.co"
+      data-anon-key="YOUR_SUPABASE_ANON_KEY"
+      defer
+    ></script>
   </body>
 </html>

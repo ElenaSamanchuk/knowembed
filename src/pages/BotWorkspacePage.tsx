@@ -1,73 +1,96 @@
-import { FormEvent, useMemo, useState } from 'react';
+import { FormEvent, useEffect, useState } from 'react';
 import { Link, Navigate, useParams } from 'react-router-dom';
 import { ChatPanel } from '../components/ChatPanel';
 import { DocUpload } from '../components/DocUpload';
-import { PLANS } from '../lib/plans';
+import { useAuth } from '../context/AuthProvider';
+import { ingestDocument, publishBot } from '../lib/api';
 import {
-  addDocument,
   buildEmbedSnippet,
-  buildPublishedBot,
-  canSendMessage,
-  canUploadDocument,
   deleteDocument,
-  downloadPublishedBot,
-  getBot,
-  getSessionUser,
-  incrementMessageUsage,
+  fetchBot,
+  fetchDocuments,
+  type BotRecord,
+  type StoredDocument,
   updateBot,
-} from '../lib/store';
+} from '../lib/data';
+import { PLANS } from '../lib/plans';
 
 export function BotWorkspacePage() {
   const { botId = '' } = useParams();
-  const user = getSessionUser();
-  const [tick, setTick] = useState(0);
+  const { user, profile, refreshProfile } = useAuth();
+  const [bot, setBot] = useState<BotRecord | null>(null);
+  const [documents, setDocuments] = useState<StoredDocument[]>([]);
   const [notice, setNotice] = useState('');
+  const [busy, setBusy] = useState(true);
+  const [uploading, setUploading] = useState(false);
 
-  const bot = useMemo(() => getBot(botId), [botId, tick]);
-  const plan = user ? PLANS[user.plan] : PLANS.starter;
   const origin = typeof window !== 'undefined' ? window.location.origin : '';
 
-  if (!user) return <Navigate to="/login" replace />;
+  const reload = async () => {
+    if (!user) return;
+    const [nextBot, nextDocs] = await Promise.all([
+      fetchBot(user.id, botId),
+      fetchDocuments(botId),
+    ]);
+    setBot(nextBot);
+    setDocuments(nextDocs);
+    await refreshProfile();
+  };
+
+  useEffect(() => {
+    if (!user) {
+      setBusy(false);
+      return;
+    }
+    void reload().finally(() => setBusy(false));
+  }, [user, botId]);
+
+  if (!user || !profile) return <Navigate to="/login" replace />;
+  if (busy) return <main className="page-shell"><p className="muted">Loading bot…</p></main>;
   if (!bot) return <Navigate to="/app" replace />;
 
-  const refresh = () => setTick((value) => value + 1);
-  const canChat = canSendMessage(user);
-  const canUpload = canUploadDocument(user, bot);
+  const plan = PLANS[profile.plan];
+  const canChat = profile.messagesUsedThisMonth < plan.messagesPerMonth;
+  const canUpload = documents.length < plan.documents;
   const embedSnippet = buildEmbedSnippet(origin, bot.publicId);
-  const published = buildPublishedBot(bot, plan.branding);
 
-  const saveSettings = (event: FormEvent<HTMLFormElement>) => {
+  const saveSettings = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     const form = new FormData(event.currentTarget);
-    updateBot(bot.id, {
+    await updateBot(user.id, bot.id, {
       name: String(form.get('name') ?? bot.name),
       welcome: String(form.get('welcome') ?? bot.welcome),
       themeColor: String(form.get('themeColor') ?? bot.themeColor),
       publicId: String(form.get('publicId') ?? bot.publicId),
     });
-    refresh();
+    await reload();
     setNotice('Settings saved.');
   };
 
-  const handleUpload = (fileName: string, text: string) => {
+  const handleUpload = async (fileName: string, text: string) => {
     if (!canUpload) {
       setNotice(`Your plan allows ${plan.documents} docs per bot. Upgrade to add more.`);
       return;
     }
-    addDocument(bot.id, fileName, text);
-    refresh();
-    setNotice(`Added ${fileName}.`);
+    setUploading(true);
+    try {
+      await ingestDocument(bot.id, fileName, text);
+      await reload();
+      setNotice(`Added ${fileName} and generated embeddings.`);
+    } catch (error) {
+      setNotice(error instanceof Error ? error.message : 'Upload failed');
+    } finally {
+      setUploading(false);
+    }
   };
 
-  const handlePublish = () => {
-    if (!bot.chunks.length) {
-      setNotice('Upload at least one knowledge doc before publishing.');
-      return;
+  const handlePublish = async () => {
+    try {
+      const result = await publishBot(bot.id);
+      setNotice(`Published ${result.publicId}. Widget is live via Supabase.`);
+    } catch (error) {
+      setNotice(error instanceof Error ? error.message : 'Publish failed');
     }
-    downloadPublishedBot(published);
-    setNotice(
-      `Downloaded ${bot.publicId}.json — place it in public/bots/ before deploy so the widget can load it.`,
-    );
   };
 
   const copyEmbed = async () => {
@@ -88,7 +111,7 @@ export function BotWorkspacePage() {
         </nav>
         <div className="sidebar-foot">
           <p className="plan-badge">{plan.name}</p>
-          <p className="muted">{user.email}</p>
+          <p className="muted">{profile.email}</p>
         </div>
       </aside>
 
@@ -99,10 +122,10 @@ export function BotWorkspacePage() {
             <h1>{bot.name}</h1>
           </div>
           <div className="toolbar">
-            <button type="button" className="btn btn-secondary" onClick={handlePublish}>
-              Publish JSON
+            <button type="button" className="btn btn-secondary" onClick={() => void handlePublish()}>
+              Publish bot
             </button>
-            <button type="button" className="btn btn-primary" onClick={copyEmbed}>
+            <button type="button" className="btn btn-primary" onClick={() => void copyEmbed()}>
               Copy embed
             </button>
           </div>
@@ -113,7 +136,7 @@ export function BotWorkspacePage() {
         <div className="workspace-grid">
           <section className="panel-card stack">
             <h2>Settings</h2>
-            <form className="stack" onSubmit={saveSettings}>
+            <form className="stack" onSubmit={(event) => void saveSettings(event)}>
               <label className="field">
                 <span>Bot name</span>
                 <input name="name" defaultValue={bot.name} required />
@@ -136,9 +159,10 @@ export function BotWorkspacePage() {
             </form>
 
             <h2>Knowledge docs</h2>
-            <DocUpload disabled={!canUpload} onUpload={handleUpload} />
+            <DocUpload disabled={!canUpload || uploading} onUpload={(name, text) => void handleUpload(name, text)} />
+            {uploading ? <p className="muted">Embedding chunks with OpenAI…</p> : null}
             <ul className="doc-list">
-              {bot.documents.map((doc) => (
+              {documents.map((doc) => (
                 <li key={doc.id}>
                   <div>
                     <strong>{doc.name}</strong>
@@ -148,9 +172,9 @@ export function BotWorkspacePage() {
                     type="button"
                     className="btn btn-ghost"
                     onClick={() => {
-                      deleteDocument(bot.id, doc.id);
-                      refresh();
-                      setNotice(`Removed ${doc.name}.`);
+                      void deleteDocument(doc.id)
+                        .then(reload)
+                        .then(() => setNotice(`Removed ${doc.name}.`));
                     }}
                   >
                     Remove
@@ -162,7 +186,7 @@ export function BotWorkspacePage() {
             <h2>Embed snippet</h2>
             <pre className="code-block">{embedSnippet}</pre>
             <p className="muted">
-              Widget loads <code>/bots/{bot.publicId}.json</code>. Try{' '}
+              Widget calls Supabase Edge Functions for AI answers. Try{' '}
               <a href="/embed-demo.html" target="_blank" rel="noreferrer">
                 embed demo
               </a>
@@ -179,14 +203,10 @@ export function BotWorkspacePage() {
               </div>
             ) : null}
             <ChatPanel
-              botName={bot.name}
+              botId={bot.id}
               welcome={bot.welcome}
-              chunks={bot.chunks}
-              disabled={!canChat || !bot.chunks.length}
-              onSend={() => {
-                incrementMessageUsage();
-                refresh();
-              }}
+              disabled={!canChat || bot.chunkCount === 0}
+              onAnswered={refreshProfile}
             />
           </section>
         </div>

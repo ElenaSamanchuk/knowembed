@@ -1,31 +1,41 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Link, Navigate, useNavigate } from 'react-router-dom';
-import {
-  canCreateBot,
-  createBot,
-  getBots,
-  getSessionUser,
-  signOut,
-} from '../lib/store';
+import { useAuth } from '../context/AuthProvider';
+import { createBot, fetchBots, type BotRecord } from '../lib/data';
 import { PLANS } from '../lib/plans';
 
 export function DashboardPage() {
   const navigate = useNavigate();
-  const user = getSessionUser();
-  const [bots, setBots] = useState(() => getBots());
+  const { user, profile, loading, signOut } = useAuth();
+  const [bots, setBots] = useState<BotRecord[]>([]);
   const [notice, setNotice] = useState('');
+  const [busy, setBusy] = useState(true);
 
-  if (!user) return <Navigate to="/login" replace />;
-
-  const plan = PLANS[user.plan];
-
-  const handleCreate = () => {
-    if (!canCreateBot(user)) {
-      setNotice(`Starter includes ${plan.bots} bot. Upgrade to Pro for more.`);
+  useEffect(() => {
+    if (!user) {
+      setBusy(false);
       return;
     }
-    const bot = createBot(`Bot ${bots.length + 1}`);
-    setBots(getBots());
+
+    void fetchBots(user.id)
+      .then(setBots)
+      .finally(() => setBusy(false));
+  }, [user]);
+
+  if (loading || busy) {
+    return <main className="page-shell"><p className="muted">Loading workspace…</p></main>;
+  }
+
+  if (!user || !profile) return <Navigate to="/login" replace />;
+
+  const plan = PLANS[profile.plan];
+
+  const handleCreate = async () => {
+    if (bots.length >= plan.bots) {
+      setNotice(`Your plan includes ${plan.bots} bot(s). Upgrade to Pro for more.`);
+      return;
+    }
+    const bot = await createBot(user.id, `Bot ${bots.length + 1}`);
     navigate(`/app/bots/${bot.id}`);
   };
 
@@ -43,14 +53,11 @@ export function DashboardPage() {
         </nav>
         <div className="sidebar-foot">
           <p className="plan-badge">{plan.name} plan</p>
-          <p className="muted">{user.email}</p>
+          <p className="muted">{profile.email}</p>
           <button
             type="button"
             className="btn btn-ghost btn-block"
-            onClick={() => {
-              signOut();
-              navigate('/login');
-            }}
+            onClick={() => void signOut().then(() => navigate('/login'))}
           >
             Sign out
           </button>
@@ -63,7 +70,7 @@ export function DashboardPage() {
             <p className="eyebrow">Dashboard</p>
             <h1>Your chatbots</h1>
           </div>
-          <button type="button" className="btn btn-primary" onClick={handleCreate}>
+          <button type="button" className="btn btn-primary" onClick={() => void handleCreate()}>
             New chatbot
           </button>
         </header>
@@ -71,7 +78,7 @@ export function DashboardPage() {
         {notice ? <div className="notice">{notice}</div> : null}
 
         <section className="usage-strip">
-          <span>{user.messagesUsedThisMonth} / {plan.messagesPerMonth} answers this month</span>
+          <span>{profile.messagesUsedThisMonth} / {plan.messagesPerMonth} answers this month</span>
           <span>{bots.length} / {plan.bots} bots</span>
         </section>
 
@@ -79,7 +86,7 @@ export function DashboardPage() {
           <div className="panel-card empty-state">
             <h2>No bots yet</h2>
             <p className="muted">Upload docs, test chat, embed on your site.</p>
-            <button type="button" className="btn btn-primary" onClick={handleCreate}>
+            <button type="button" className="btn btn-primary" onClick={() => void handleCreate()}>
               Create first bot
             </button>
           </div>
@@ -88,7 +95,7 @@ export function DashboardPage() {
             {bots.map((bot) => (
               <Link key={bot.id} to={`/app/bots/${bot.id}`} className="bot-card">
                 <strong>{bot.name}</strong>
-                <span className="muted">{bot.documents.length} docs · {bot.chunks.length} chunks</span>
+                <span className="muted">{bot.documentCount} docs · {bot.chunkCount} chunks</span>
                 <code>{bot.publicId}</code>
               </Link>
             ))}

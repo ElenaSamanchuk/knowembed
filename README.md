@@ -2,63 +2,41 @@
 
 MVP for [Paralect Product Academy — Embeddable Chatbot Builder](https://www.paralect.com/academy/product-manager/projects/chatbot-builder).
 
-## What it does
+## Stack (matches assignment)
 
-- **Landing + pricing** — product positioning, Starter vs Pro plans, mock Stripe checkout
-- **Auth + dashboard** — demo sign-in, bot list, usage limits
-- **Knowledge upload** — `.txt` / `.md` docs chunked for retrieval
-- **In-app chat** — ChatGPT-like test panel before publish
-- **Embed widget** — one script tag, free-text Q&A from published JSON
-- **Billing gates** — message limits, doc limits, branding on Starter
+- **Supabase** — auth, Postgres, pgvector, Edge Functions
+- **OpenAI** — embeddings (`text-embedding-3-small`) + chat (`gpt-4o-mini`)
+- **Vite + React** — landing, dashboard, bot workspace
+- **Vanilla widget** — embeddable script for client sites
 
-## Product choices
+## Features
 
-| Decision | Why |
-|----------|-----|
-| Keyword retrieval (not OpenAI) for MVP | Works offline, no API keys in test, easy to demo |
-| Publish = static JSON at `/bots/{id}.json` | True embed on any domain; matches suggested deploy path |
-| localStorage workspace | Fast to ship; Supabase schema documented for production |
-| Mock Stripe checkout | Shows gated Pro upgrade without live payments |
+- Landing + pricing + mock Stripe checkout
+- Email/password auth via Supabase
+- Upload `.txt` / `.md` docs → chunked + embedded
+- In-app AI chat (vector search + GPT)
+- Publish bot → embed widget calls Supabase Edge Functions
+- Plan limits (Starter vs Pro)
 
-## Run locally
+## Setup
+
+See **[docs/SUPABASE_SETUP.md](docs/SUPABASE_SETUP.md)** for full instructions.
+
+Quick start:
 
 ```bash
-cd paralect-chatbot-builder
+cp .env.example .env.local
+# fill VITE_SUPABASE_URL and VITE_SUPABASE_ANON_KEY
 npm install
 npm run dev
 ```
 
-- Landing: http://localhost:5173/
-- App: sign in with any email → dashboard
-- Embed demo: http://localhost:5173/embed-demo.html
+Run the SQL migration in Supabase dashboard, add `OPENAI_API_KEY` secret, deploy Edge Functions.
 
-## Publish a bot
+## Repo
 
-1. Upload docs in bot workspace
-2. Click **Publish JSON** → save as `public/bots/YOUR-PUBLIC-ID.json`
-3. `npm run build` and deploy `dist/`
-
-## Deploy
-
-```bash
-npm run build
-# Deploy dist/ to Vercel or GitHub Pages
-```
-
-## Production path (Supabase)
-
-See `docs/supabase-schema.sql` for auth, bots, documents, and vector search with pgvector.
-
-Suggested next step: Edge Function for OpenAI/Gemini answers using retrieved chunks.
+https://github.com/ElenaSamanchuk/knowembed
 
 ## Submit to Paralect
 
-See `docs/SUBMISSION.md` for the email draft to Karina.
-
-Deliverables:
-
-1. Live demo URL (landing + app + embed demo)
-2. GitHub repo
-3. Loom walkthrough (2–3 min) or written tutorial
-
-Built with **Vite + React + Cursor** (vibe-coding workflow).
+See `docs/SUBMISSION.md`.

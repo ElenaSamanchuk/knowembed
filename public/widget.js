@@ -3,82 +3,30 @@
   if (!script) return;
 
   const botId = script.getAttribute('data-bot-id');
-  if (!botId) {
-    console.error('[KnowEmbed] Missing data-bot-id on script tag.');
+  const apiBase = script.getAttribute('data-api');
+  const anonKey = script.getAttribute('data-anon-key');
+
+  if (!botId || !apiBase) {
+    console.error('[KnowEmbed] Missing data-bot-id or data-api on script tag.');
     return;
   }
 
-  const scriptUrl = new URL(script.src, window.location.href);
-  const baseUrl = scriptUrl.origin + scriptUrl.pathname.replace(/\/widget\.js$/, '');
+  const functionsBase = apiBase.replace(/\/$/, '') + '/functions/v1';
 
-  const STOP_WORDS = new Set([
-    'a', 'an', 'the', 'and', 'or', 'to', 'of', 'in', 'on', 'for', 'is', 'it', 'with', 'as', 'at',
-    'be', 'by', 'from', 'that', 'this', 'what', 'how', 'when', 'where', 'why', 'can', 'you', 'your',
-  ]);
-
-  function tokenize(value) {
-    return value
-      .toLowerCase()
-      .replace(/[^a-z0-9\s]/g, ' ')
-      .split(/\s+/)
-      .filter(function (token) {
-        return token.length > 2 && !STOP_WORDS.has(token);
-      });
-  }
-
-  function retrieveRelevantChunks(query, chunks, limit) {
-    if (!chunks.length) return [];
-    var queryTokens = tokenize(query);
-    if (!queryTokens.length) return chunks.slice(0, limit || 3);
-
-    var scored = chunks
-      .map(function (chunk) {
-        var chunkTokens = new Set(tokenize(chunk.content));
-        var score = queryTokens.reduce(function (sum, token) {
-          return sum + (chunkTokens.has(token) ? 1 : 0);
-        }, 0);
-        return { chunk: chunk, score: score };
-      })
-      .sort(function (left, right) {
-        return right.score - left.score;
-      });
-
-    var best = scored.filter(function (item) {
-      return item.score > 0;
-    }).slice(0, limit || 3);
-    if (best.length) return best.map(function (item) {
-      return item.chunk;
-    });
-    return chunks.slice(0, limit || 3);
-  }
-
-  function composeAnswer(query, chunks, botName) {
-    var relevant = retrieveRelevantChunks(query, chunks);
-    if (!relevant.length) {
-      return "I couldn't find this in " + botName + "'s knowledge base yet. Try rephrasing your question.";
-    }
-    var excerpt = relevant
-      .map(function (chunk) {
-        return chunk.content;
-      })
-      .join('\n\n');
-    return 'Based on ' + botName + "'s uploaded docs:\n\n" + excerpt;
-  }
-
-  var state = {
+  const state = {
     open: false,
     config: null,
     messages: [],
     thinking: false,
   };
 
-  var host = document.createElement('div');
+  const host = document.createElement('div');
   host.id = 'knowembed-root';
   document.body.appendChild(host);
 
-  var shadow = host.attachShadow({ mode: 'open' });
+  const shadow = host.attachShadow({ mode: 'open' });
 
-  var style = document.createElement('style');
+  const style = document.createElement('style');
   style.textContent =
     ':host { all: initial; }' +
     '* { box-sizing: border-box; font-family: "DM Sans", system-ui, sans-serif; }' +
@@ -99,36 +47,36 @@
 
   shadow.appendChild(style);
 
-  var launcher = document.createElement('button');
+  const launcher = document.createElement('button');
   launcher.className = 'launcher';
   launcher.type = 'button';
   launcher.setAttribute('aria-label', 'Open chat');
   launcher.textContent = '💬';
 
-  var panel = document.createElement('section');
+  const panel = document.createElement('section');
   panel.className = 'panel';
   panel.setAttribute('aria-label', 'Chatbot');
 
-  var head = document.createElement('header');
+  const head = document.createElement('header');
   head.className = 'head';
-  head.innerHTML = '<div><strong>Chat</strong><div style="font-size:12px;opacity:.85">Ask our docs</div></div>';
+  head.innerHTML = '<div><strong>Chat</strong><div style="font-size:12px;opacity:.85">AI assistant</div></div>';
 
-  var closeBtn = document.createElement('button');
+  const closeBtn = document.createElement('button');
   closeBtn.type = 'button';
   closeBtn.textContent = '×';
   closeBtn.setAttribute('aria-label', 'Close chat');
   head.appendChild(closeBtn);
 
-  var messages = document.createElement('div');
+  const messages = document.createElement('div');
   messages.className = 'messages';
 
-  var composer = document.createElement('form');
+  const composer = document.createElement('form');
   composer.className = 'composer';
   composer.innerHTML =
     '<input type="text" placeholder="Ask a question…" autocomplete="off" />' +
     '<button type="submit">Send</button>';
 
-  var badge = document.createElement('div');
+  const badge = document.createElement('div');
   badge.className = 'badge';
   badge.hidden = true;
   badge.textContent = 'Powered by KnowEmbed';
@@ -136,8 +84,8 @@
   panel.append(head, messages, composer, badge);
   shadow.append(launcher, panel);
 
-  var input = composer.querySelector('input');
-  var sendBtn = composer.querySelector('button');
+  const input = composer.querySelector('input');
+  const sendBtn = composer.querySelector('button');
 
   function renderMessages() {
     messages.innerHTML = '';
@@ -146,14 +94,14 @@
       node.className = 'msg ' + item.role;
       node.textContent = item.text;
       if (item.role === 'user' && state.config) {
-        node.style.background = state.config.themeColor;
+        node.style.background = state.config.theme_color;
       }
       messages.appendChild(node);
     });
     if (state.thinking) {
       var thinking = document.createElement('div');
       thinking.className = 'msg bot';
-      thinking.textContent = 'Searching docs…';
+      thinking.textContent = 'Searching docs with AI…';
       messages.appendChild(thinking);
     }
     messages.scrollTop = messages.scrollHeight;
@@ -168,12 +116,33 @@
     state.thinking = true;
     renderMessages();
 
-    window.setTimeout(function () {
-      var answer = composeAnswer(question, state.config.chunks || [], state.config.name);
-      state.messages.push({ role: 'bot', text: answer });
-      state.thinking = false;
-      renderMessages();
-    }, 400);
+    fetch(functionsBase + '/public-chat', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        apikey: anonKey || '',
+      },
+      body: JSON.stringify({ publicId: botId, message: question }),
+    })
+      .then(function (response) {
+        return response.json().then(function (payload) {
+          if (!response.ok) throw new Error(payload.error || 'Chat failed');
+          return payload.answer;
+        });
+      })
+      .then(function (answer) {
+        state.messages.push({ role: 'bot', text: answer });
+        state.thinking = false;
+        renderMessages();
+      })
+      .catch(function (error) {
+        state.messages.push({
+          role: 'bot',
+          text: error.message || 'Sorry, something went wrong.',
+        });
+        state.thinking = false;
+        renderMessages();
+      });
   }
 
   composer.addEventListener('submit', function (event) {
@@ -201,16 +170,20 @@
   });
   closeBtn.addEventListener('click', closePanel);
 
-  fetch(baseUrl + '/bots/' + botId + '.json')
+  fetch(functionsBase + '/public-bot?public_id=' + encodeURIComponent(botId), {
+    headers: { apikey: anonKey || '' },
+  })
     .then(function (response) {
-      if (!response.ok) throw new Error('Bot config not found (' + response.status + ')');
-      return response.json();
+      return response.json().then(function (payload) {
+        if (!response.ok) throw new Error(payload.error || 'Bot not found');
+        return payload;
+      });
     })
     .then(function (config) {
       state.config = config;
-      launcher.style.background = config.themeColor;
-      head.style.background = config.themeColor;
-      sendBtn.style.background = config.themeColor;
+      launcher.style.background = config.theme_color;
+      head.style.background = config.theme_color;
+      sendBtn.style.background = config.theme_color;
       head.querySelector('strong').textContent = config.name;
       launcher.setAttribute('aria-label', 'Open ' + config.name);
       badge.hidden = !config.branding;

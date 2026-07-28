@@ -696,3 +696,17 @@ a {
   border: 1px solid #bbf7d0;
   color: #166534;
 }
+
+.link-button {
+  border: 0;
+  background: none;
+  color: #1d4ed8;
+  font: inherit;
+  cursor: pointer;
+  text-decoration: underline;
+}
+
+.chat-error {
+  margin: 0;
+  padding: 0 12px 8px;
+}

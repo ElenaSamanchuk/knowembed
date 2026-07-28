@@ -1,23 +1,26 @@
 import { Link, useNavigate } from 'react-router-dom';
 import { SiteHeader } from '../components/SiteHeader';
+import { useAuth } from '../context/AuthProvider';
+import { upgradePlan } from '../lib/data';
 import { PLANS } from '../lib/plans';
-import { getSessionUser, upgradePlan } from '../lib/store';
 
 export function PricingPage() {
   const navigate = useNavigate();
-  const user = getSessionUser();
+  const { user, refreshProfile } = useAuth();
 
-  const checkout = (plan: 'starter' | 'pro') => {
+  const checkout = async (plan: 'starter' | 'pro') => {
     if (!user) {
       navigate('/login');
       return;
     }
     if (plan === 'pro') {
-      upgradePlan('pro');
+      await upgradePlan(user.id, 'pro');
+      await refreshProfile();
       navigate('/checkout?plan=pro');
       return;
     }
-    upgradePlan('starter');
+    await upgradePlan(user.id, 'starter');
+    await refreshProfile();
     navigate('/app');
   };
 
@@ -28,7 +31,7 @@ export function PricingPage() {
         <header className="page-heading">
           <p className="eyebrow">Pricing</p>
           <h1>Simple plans for early-stage teams</h1>
-          <p className="lead">Mock Stripe checkout for the MVP. Production path: Supabase + Stripe test keys.</p>
+          <p className="lead">Mock Stripe checkout. Plan limits enforced in Supabase Edge Functions.</p>
         </header>
 
         <section className="pricing-grid">
@@ -44,7 +47,7 @@ export function PricingPage() {
                   <li key={item}>{item}</li>
                 ))}
               </ul>
-              <button type="button" className="btn btn-primary" onClick={() => checkout(plan.id)}>
+              <button type="button" className="btn btn-primary" onClick={() => void checkout(plan.id)}>
                 {plan.id === 'pro' ? 'Upgrade with Stripe test' : 'Use Starter'}
               </button>
             </article>
