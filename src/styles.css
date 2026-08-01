@@ -358,6 +358,10 @@ a {
   gap: 16px;
 }
 
+.landing-pricing {
+  margin: 48px 0 24px;
+}
+
 @media (max-width: 900px) {
   .feature-grid {
     grid-template-columns: 1fr;

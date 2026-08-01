@@ -1,39 +1,49 @@
-# Submission draft for Karina (Paralect)
+# Submission — KnowEmbed (Paralect)
 
 Hi Karina,
 
-I'm back and completed the Embeddable Chatbot Builder assignment.
+I completed the **Embeddable Chatbot Builder** assignment. Written walkthrough below (no video).
 
-**Live demo:** [ADD YOUR DEPLOY URL]
-**Embed demo:** [ADD YOUR DEPLOY URL]/embed-demo.html
-**Repo:** https://github.com/ElenaSamanchuk/knowembed
-**Walkthrough:** [ADD LOOM LINK]
+## Links
 
-## What I built — KnowEmbed
+| | URL |
+|---|-----|
+| **Live app** | https://elenasamanchuk.github.io/knowembed/ |
+| **Embed demo** | https://elenasamanchuk.github.io/knowembed/embed-demo.html |
+| **Demo guide** | https://elenasamanchuk.github.io/knowembed/docs/demo.html |
+| **Repo** | https://github.com/ElenaSamanchuk/knowembed |
 
-Users can:
+## What I built
 
-1. Sign up with Supabase auth
-2. Upload company docs (FAQ, pricing, policies)
-3. Test AI answers in a ChatGPT-like workspace (pgvector + OpenAI)
-4. Publish a bot and embed it on any site with one script tag
-5. Choose Starter (free, limits + branding) or Pro (mock Stripe checkout)
+**KnowEmbed** — upload company docs → AI chatbot in-app → embeddable widget → pricing tiers.
 
-## Stack (as suggested)
+1. Supabase auth + Postgres (bots, documents, chunks, published_bots)  
+2. Upload FAQ → chunked & stored in DB  
+3. ChatGPT-like workspace — RAG: DB retrieval + Groq LLM  
+4. Publish → embed via one script tag (Shadow DOM widget)  
+5. Starter / Pro plans + mock Stripe checkout; limits in Edge Functions  
 
-- **Supabase** — auth, Postgres, pgvector, Edge Functions
-- **OpenAI** — embeddings + GPT answers
-- **Vite + React** — landing, app, billing
-- **Vanilla embed widget** — calls Supabase public Edge Functions
+## Stack (per assignment)
 
-## How to test
+- **Supabase** — auth, database, Edge Functions  
+- **Groq** (free) — Llama 3.3 for AI answers  
+- **Vite + React** — landing, dashboard, workspace  
+- **Vanilla widget** — production-style embed  
 
-1. Create account → dashboard with seeded Store Assistant bot
-2. Ask “How long is shipping?” in test chat
-3. Publish bot → open embed demo page
-4. Pricing → mock upgrade to Pro
+## How to test (5 min)
 
-Built with Cursor (vibe-coding workflow). Happy to walk through product decisions.
+See **[docs/DEMO.md](./DEMO.md)** for full walkthrough with expected results.
 
-Best,
-Elena Samanchuk
+Quick path: sign up → Store Assistant → ask *How long is shipping?* → Publish → embed-demo.html → Pricing → mock upgrade.
+
+## Tests
+
+```bash
+npm run test && npm run test:e2e
+```
+
+Built with Cursor. Happy to walk through product decisions on a call.
+
+Best,  
+Elena Samanchuk  
+elenasamanchuk@gmail.com

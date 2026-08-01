@@ -1,5 +1,6 @@
 import { Link } from 'react-router-dom';
 import { SiteHeader } from '../components/SiteHeader';
+import { PLANS } from '../lib/plans';
 
 export function LandingPage() {
   return (
@@ -10,11 +11,11 @@ export function LandingPage() {
           <p className="eyebrow">Docs → chatbot → embed</p>
           <h1>Turn company knowledge into an embeddable AI assistant.</h1>
           <p className="lead">
-            Upload docs, test answers in a ChatGPT-like workspace, paste one script on your site.
-            Built as a launch-ready MVP for support and lead qualification.
+            Upload FAQ and policies to Supabase, test answers in a ChatGPT-like workspace,
+            publish one script tag for your website. Built as a launch-ready MVP.
           </p>
           <div className="hero-actions">
-            <Link to="/app" className="btn btn-primary">
+            <Link to="/login" className="btn btn-primary">
               Start free
             </Link>
             <Link to="/pricing" className="btn btn-ghost">
@@ -26,24 +27,48 @@ export function LandingPage() {
         <section className="feature-grid">
           <article className="feature-card">
             <h2>Upload knowledge</h2>
-            <p>Drop FAQ, pricing, policies, onboarding docs. We chunk and index them for answers.</p>
+            <p>Drop FAQ, pricing, policies (.txt / .md). Chunks are stored in Postgres and indexed for search.</p>
           </article>
           <article className="feature-card">
             <h2>Chat inside the app</h2>
-            <p>Validate answers before going live — same experience your website visitors will get.</p>
+            <p>Validate answers before going live — Groq LLM with your doc context (real RAG pipeline).</p>
           </article>
           <article className="feature-card">
             <h2>Embed anywhere</h2>
-            <p>Copy one script tag. Widget loads your published bot bundle from a static JSON endpoint.</p>
+            <p>Copy one script tag. Widget calls Supabase Edge Functions — same answers as in-app chat.</p>
           </article>
         </section>
 
+        <section className="pricing-grid landing-pricing">
+          {Object.values(PLANS).map((plan) => (
+            <article key={plan.id} className={`price-card ${plan.id === 'pro' ? 'price-card--featured' : ''}`}>
+              <h2>{plan.name}</h2>
+              <p className="price-value">
+                {plan.price === 0 ? 'Free' : `$${plan.price}`}
+                {plan.price > 0 ? <span> / month</span> : null}
+              </p>
+              <ul>
+                {plan.highlights.map((item) => (
+                  <li key={item}>{item}</li>
+                ))}
+              </ul>
+            </article>
+          ))}
+        </section>
+
         <section className="cta-band">
-          <h2>Ready for a real launch workflow</h2>
-          <p>Starter is free. Pro removes branding and raises limits. Stripe test checkout included.</p>
-          <Link to="/login" className="btn btn-primary">
-            Create account
-          </Link>
+          <h2>Written walkthrough instead of video</h2>
+          <p>
+            Full demo guide with screenshots: signup → upload → chat → publish → embed widget → pricing.
+          </p>
+          <div className="hero-actions">
+            <Link to="/docs/demo.html" className="btn btn-ghost">
+              Read demo guide
+            </Link>
+            <Link to="/login" className="btn btn-primary">
+              Create account
+            </Link>
+          </div>
         </section>
       </main>
     </>

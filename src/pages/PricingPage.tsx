@@ -19,8 +19,6 @@ export function PricingPage() {
       navigate('/checkout?plan=pro');
       return;
     }
-    await upgradePlan(user.id, 'starter');
-    await refreshProfile();
     navigate('/app');
   };
 

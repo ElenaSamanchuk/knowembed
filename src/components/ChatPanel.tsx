@@ -48,7 +48,12 @@ export function ChatPanel({ botId, welcome, disabled, disabledReason, onAnswered
       ]);
       onAnswered?.();
     } catch (err) {
-      setError(err instanceof Error ? err.message : 'Chat failed');
+      const message = err instanceof Error ? err.message : 'Chat failed';
+      setError(message);
+      setMessages((current) => [
+        ...current,
+        { id: crypto.randomUUID(), role: 'assistant', content: `Sorry — ${message}` },
+      ]);
     } finally {
       setThinking(false);
     }

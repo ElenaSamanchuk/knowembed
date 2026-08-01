@@ -32,7 +32,9 @@ export async function chatWithBot(botId: string, message: string): Promise<strin
 
   const payload = await response.json();
   if (!response.ok) throw new Error(payload.error ?? 'Chat failed');
-  return payload.answer as string;
+  const answer = typeof payload.answer === 'string' ? payload.answer.trim() : '';
+  if (!answer) throw new Error('AI returned an empty answer. Check Groq API key in Supabase secrets.');
+  return answer;
 }
 
 export async function publishBot(botId: string): Promise<{ publicId: string; branding: boolean }> {

@@ -1,74 +1,56 @@
-# Supabase setup for KnowEmbed
+# Supabase setup (KnowEmbed)
 
 Project dashboard: https://supabase.com/dashboard/project/buwxmfapwampgpwvnulb
 
-## 1. Run database migration
+## 1. Run migration
 
-In Supabase → **SQL Editor** → New query, paste and run:
+In **SQL Editor**, run:
 
 `supabase/migrations/20260728100000_initial_schema.sql`
 
-This creates profiles, bots, documents, chunks (pgvector), published_bots, and RLS policies.
+Creates: `profiles`, `bots`, `documents`, `chunks`, `published_bots`, RLS, helper functions.
 
-## 2. Copy API keys
+## 2. Auth
 
-Supabase → **Project Settings** → **API**
+**Authentication → Providers → Email**
 
-Create `.env.local` in the project root:
+- Enable sign-up  
+- Disable **Confirm email** (for demo frictionless login)
 
-```env
-VITE_SUPABASE_URL=https://buwxmfapwampgpwvnulb.supabase.co
-VITE_SUPABASE_ANON_KEY=paste_anon_key_here
-```
+## 3. AI secret (free)
 
-Also update `public/embed-demo.html` → replace `YOUR_SUPABASE_ANON_KEY`.
-
-## 3. Add OpenAI secret for Edge Functions
-
-Supabase → **Project Settings** → **Edge Functions** → **Secrets**
-
-Add:
+**Edge Functions → Secrets** — add:
 
 ```
-OPENAI_API_KEY=sk-...
+GROQ_API_KEY=gsk_...
 ```
+
+Get key: https://console.groq.com/keys
+
+Optional fallbacks: `GEMINI_API_KEY`, `OPENAI_API_KEY`
 
 ## 4. Deploy Edge Functions
 
-If Supabase GitHub integration is connected, push this repo and deploy from the dashboard.
+Push to `main` (triggers GitHub Actions) or run workflow **Deploy Supabase Edge Functions**.
 
-Or install Supabase CLI locally:
+Functions: `ingest-document`, `chat`, `publish-bot`, `public-chat`, `public-bot`
 
-```bash
-npx supabase login
-npx supabase link --project-ref buwxmfapwampgpwvnulb
-npx supabase db push
-npx supabase functions deploy ingest-document
-npx supabase functions deploy chat
-npx supabase functions deploy publish-bot
-npx supabase functions deploy public-chat
-npx supabase functions deploy public-bot
-```
-
-## 5. Disable email confirmation (optional for demo)
-
-Supabase → **Authentication** → **Providers** → **Email**
-
-Turn off **Confirm email** so test signup works instantly.
-
-## 6. Test flow
+## 5. Frontend env
 
 ```bash
+cp .env.example .env.local
+# VITE_SUPABASE_URL=
+# VITE_SUPABASE_ANON_KEY=
 npm install
 npm run dev
 ```
 
-1. Create account at `/login`
-2. Open **Store Assistant** bot (seeded automatically)
-3. Ask a question in test chat (uses OpenAI + vector search)
-4. Click **Publish bot**
-5. Open `/embed-demo.html` and test widget
+## 6. Verify
 
-## Security note
+1. Sign up at `/login`  
+2. Store Assistant → Re-index FAQ if needed  
+3. Chat: *How long is shipping?*  
+4. Publish → `/embed-demo.html`
 
-Never commit `.env.local` or database passwords to GitHub. Rotate credentials if they were shared in chat.
+See [DEMO.md](./DEMO.md) for full walkthrough.  
+Russian guide: [SETUP_RU.md](./SETUP_RU.md)

@@ -1,43 +1,43 @@
-# KnowEmbed — Embeddable Chatbot Builder (Paralect test MVP)
+# KnowEmbed — Embeddable Chatbot Builder
 
-MVP for [Paralect Product Academy — Embeddable Chatbot Builder](https://www.paralect.com/academy/product-manager/projects/chatbot-builder).
+MVP for [Paralect Product Academy](https://www.paralect.com/academy/product-manager/projects/chatbot-builder).
 
-## Stack (matches assignment)
-
-- **Supabase** — auth, Postgres, documents, Edge Functions
-- **Groq** (free) — Llama 3.3 AI answers with doc context (RAG)
-- **Gemini / OpenAI** — optional fallbacks
-- **Vite + React** — landing, dashboard, bot workspace
-- **Vanilla widget** — embeddable script for client sites
+**Live:** https://elenasamanchuk.github.io/knowembed/  
+**Embed demo:** https://elenasamanchuk.github.io/knowembed/embed-demo.html  
+**Written demo guide:** [docs/DEMO.md](./docs/DEMO.md) · [online](./public/docs/demo.html)
 
 ## Features
 
 - Landing + pricing + mock Stripe checkout
-- Email/password auth via Supabase
-- Upload `.txt` / `.md` docs → chunked and stored in Postgres
-- In-app AI chat (retrieve chunks from DB → Groq LLM answer)
-- Publish bot → embed widget calls Supabase Edge Functions
-- Plan limits (Starter vs Pro)
+- Supabase auth, Postgres, Edge Functions
+- Upload docs → chunks in DB → RAG chat (Groq LLM)
+- Publish bot → embeddable Shadow DOM widget
+- Plan limits (Starter / Pro) enforced server-side
 
-## Setup
-
-See **[docs/SUPABASE_SETUP.md](docs/SUPABASE_SETUP.md)** for full instructions.
-
-Quick start:
+## Quick start
 
 ```bash
-cp .env.example .env.local
-# fill VITE_SUPABASE_URL and VITE_SUPABASE_ANON_KEY
+cp .env.example .env.local   # VITE_SUPABASE_URL, VITE_SUPABASE_ANON_KEY
 npm install
 npm run dev
 ```
 
-Run the SQL migration in Supabase dashboard, add `GROQ_API_KEY` secret, deploy Edge Functions.
+Setup: [docs/SUPABASE_SETUP.md](./docs/SUPABASE_SETUP.md) · [docs/SETUP_RU.md](./docs/SETUP_RU.md)
+
+## Tests
+
+```bash
+npm run test           # unit: plans, chunking, retrieval
+npm run test:e2e       # Playwright: landing, pricing, embed demo
+npm run test:all
+```
+
+Optional live E2E: copy `.env.test.example` → set credentials → `npm run test:e2e`
+
+## Submit to Paralect
+
+[docs/SUBMISSION.md](./docs/SUBMISSION.md)
 
 ## Repo
 
 https://github.com/ElenaSamanchuk/knowembed
-
-## Submit to Paralect
-
-See `docs/SUBMISSION.md`.

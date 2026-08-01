@@ -33,16 +33,11 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       setProfile(null);
       return;
     }
-    setProfileLoading(true);
-    try {
-      const next = await fetchProfile(
-        currentSession.user.id,
-        currentSession.user.email ?? undefined,
-      );
-      setProfile(next);
-    } finally {
-      setProfileLoading(false);
-    }
+    const next = await fetchProfile(
+      currentSession.user.id,
+      currentSession.user.email ?? undefined,
+    );
+    setProfile(next);
   };
 
   useEffect(() => {

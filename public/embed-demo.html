@@ -8,7 +8,7 @@
       body {
         margin: 0;
         min-height: 100vh;
-        font-family: system-ui, sans-serif;
+        font-family: 'DM Sans', system-ui, sans-serif;
         background: linear-gradient(145deg, #f4f1ea 0%, #e8eef5 100%);
         color: #1a1f2e;
       }
@@ -37,20 +37,30 @@
         font-family: 'IBM Plex Mono', monospace;
         font-size: 0.85rem;
       }
+      .pill {
+        display: inline-block;
+        padding: 4px 10px;
+        border-radius: 999px;
+        background: #eff6ff;
+        color: #1d4ed8;
+        font-size: 0.82rem;
+        font-weight: 600;
+      }
     </style>
   </head>
   <body>
     <main>
+      <p class="pill">Live embed demo</p>
       <h1>Acme Store</h1>
       <p>
-        Embedded widget powered by Supabase Edge Functions + OpenAI. Publish
-        <code>demo-store-assistant</code> from the app, then ask about shipping or returns.
+        This page simulates a customer website with the KnowEmbed widget. The bot
+        <code>demo-store-assistant</code> must be <strong>published</strong> in the app first.
       </p>
       <div class="card">
-        <strong>Try it:</strong> open the chat in the bottom-right and ask “How long is shipping?”
+        <strong>Try it:</strong> open chat bottom-right → ask
+        <em>“How long is shipping?”</em> or <em>“What is your return policy?”</em>
       </div>
     </main>
-    <!-- Replace data-api and data-anon-key with your Supabase project values -->
     <script
       src="./widget.js"
       data-bot-id="demo-store-assistant"
