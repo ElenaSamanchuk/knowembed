@@ -23,33 +23,35 @@
 
 ---
 
-## Шаг 1 — AI ключ (бесплатно через Gemini)
+## Шаг 1 — AI ключ (бесплатно через Groq)
 
-**Рекомендуем Gemini — бесплатный tier, хватает для демо.**
+**Groq — бесплатный tier, реальный LLM (Llama 3.3), без карты.**
 
-1. Зайди на https://aistudio.google.com/apikey
-2. **Create API key** → скопируй ключ
+1. Зайди на https://console.groq.com/keys
+2. Создай аккаунт → **Create API Key** → скопируй ключ
 3. В Supabase: **Edge Functions → Secrets**
-4. Нажми **Add or replace secrets**
-5. Вставь **одной строкой**:
+4. **Add or replace secrets** → вставь одной строкой:
 
 ```
-GEMINI_API_KEY=AIza...твой-ключ
+GROQ_API_KEY=gsk_...твой-ключ
 ```
 
-6. Нажми **Save**
+5. **Save**
+6. GitHub Actions → **Deploy Supabase Edge Functions** → Run workflow (если код обновился)
 
-Загрузка документов теперь **бесплатная** (без embeddings). Ответы в чате идут через Gemini.
+Документы сохраняются в **Supabase Postgres**, чат вызывает **Groq API** с контекстом из ваших docs — это настоящий RAG-пipeline.
 
-### Альтернатива: OpenAI (платно)
-
-Если хочешь OpenAI — нужен баланс на https://platform.openai.com/settings/organization/billing
+### Запасной вариант: Gemini (тоже бесплатно)
 
 ```
-OPENAI_API_KEY=sk-...
+GEMINI_API_KEY=AIza...
 ```
 
-Gemini имеет приоритет, если заданы оба ключа.
+Groq имеет приоритет, если заданы оба ключа.
+
+### OpenAI — только платно
+
+Нужен баланс на platform.openai.com. Используется только если нет Groq/Gemini.
 
 ---
 
@@ -110,7 +112,7 @@ npm run dev
 
 То, что ты видишь (`SUPABASE_URL`, `SUPABASE_ANON_KEY` и т.д.) — **уже есть автоматически**. Их добавлять не нужно.
 
-Тебе нужен только **один custom secret**: `GEMINI_API_KEY` (бесплатно) или `OPENAI_API_KEY` (платно).
+Тебе нужен **GROQ_API_KEY** (бесплатно, рекомендуется) или `GEMINI_API_KEY` / `OPENAI_API_KEY`.
 
 ---
 
@@ -119,7 +121,7 @@ npm run dev
 | Симптом | Решение |
 |---------|---------|
 | «Requested function was not found» | Шаг 2–3: деплой функций |
-| «OPENAI_API_KEY is not configured» / «Add GEMINI_API_KEY» | Шаг 1: секрет Gemini или OpenAI |
+| «Add GROQ_API_KEY» / AI errors | Шаг 1: ключ Groq + redeploy functions |
 | Регистрация не пускает | Шаг 4: выключить confirm email |
 | «Unauthorized» в chat | Перелогиниться |
 

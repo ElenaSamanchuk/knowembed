@@ -186,7 +186,7 @@ export function BotWorkspacePage() {
 
             <h2>Knowledge docs</h2>
             <DocUpload disabled={!canUpload || uploading} onUpload={(name, text) => void handleUpload(name, text)} />
-            {uploading ? <p className="muted">Embedding chunks with OpenAI…</p> : null}
+            {uploading ? <p className="muted">Saving and indexing knowledge in Supabase…</p> : null}
             <ul className="doc-list">
               {documents.map((doc) => (
                 <li key={doc.id}>

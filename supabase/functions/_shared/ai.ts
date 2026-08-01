@@ -1,11 +1,7 @@
 import type { SupabaseClient } from 'jsr:@supabase/supabase-js@2';
 
-const GEMINI_MODELS = [
-  'gemini-1.5-flash',
-  'gemini-2.0-flash-lite',
-  'gemini-1.5-flash-8b',
-  'gemini-2.0-flash',
-] as const;
+const GROQ_MODEL = 'llama-3.3-70b-versatile';
+const GEMINI_MODELS = ['gemini-1.5-flash', 'gemini-1.5-flash-8b'] as const;
 const OPENAI_CHAT_MODEL = 'gpt-4o-mini';
 
 export function chunkText(text: string, documentId: string, documentName: string, size = 700) {
@@ -90,35 +86,36 @@ export async function findRelevantChunks(
   return chunks.slice(0, limit).map((chunk) => chunk.content);
 }
 
-function answerFromChunks(botName: string, question: string, contextBlocks: string[]): string {
-  if (!contextBlocks.length) {
-    return `I couldn't find this in ${botName}'s knowledge base yet. Upload FAQ or product docs and try again.`;
+async function answerWithGroq(
+  apiKey: string,
+  systemPrompt: string,
+  userPrompt: string,
+): Promise<string> {
+  const response = await fetch('https://api.groq.com/openai/v1/chat/completions', {
+    method: 'POST',
+    headers: {
+      Authorization: `Bearer ${apiKey}`,
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({
+      model: Deno.env.get('GROQ_MODEL')?.trim() || GROQ_MODEL,
+      temperature: 0.2,
+      messages: [
+        { role: 'system', content: systemPrompt },
+        { role: 'user', content: userPrompt },
+      ],
+    }),
+  });
+
+  if (!response.ok) {
+    const error = await response.text();
+    throw new Error(`Groq chat failed: ${error}`);
   }
 
-  const terms = question
-    .toLowerCase()
-    .split(/[^\p{L}\p{N}]+/u)
-    .filter((term) => term.length > 2);
-
-  const lines = contextBlocks
-    .flatMap((block) => block.split('\n'))
-    .map((line) => line.trim())
-    .filter((line) => line.length > 0 && !line.startsWith('#'));
-
-  const scored = lines
-    .map((line) => {
-      const haystack = line.toLowerCase();
-      const score = terms.reduce((total, term) => total + (haystack.includes(term) ? 1 : 0), 0);
-      return { line, score };
-    })
-    .sort((left, right) => right.score - left.score);
-
-  const best = scored.find((item) => item.score > 0)?.line ?? lines[0];
-  if (!best) {
-    return contextBlocks[0].replace(/^#+\s+/gm, '').trim();
-  }
-
-  return best;
+  const payload = await response.json();
+  const text = payload.choices?.[0]?.message?.content;
+  if (!text) throw new Error('Groq returned an empty answer');
+  return text as string;
 }
 
 function geminiModelsToTry(): string[] {
@@ -132,6 +129,8 @@ async function answerWithGemini(
   systemPrompt: string,
   userPrompt: string,
 ): Promise<string | null> {
+  let lastError = 'Gemini quota exceeded';
+
   for (const model of geminiModelsToTry()) {
     const response = await fetch(
       `https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${apiKey}`,
@@ -157,9 +156,10 @@ async function answerWithGemini(
 
     if (!response.ok) {
       const error = await response.text();
+      lastError = `Gemini chat failed (${model}): ${error}`;
       const retryable = response.status === 429 || error.includes('RESOURCE_EXHAUSTED');
       if (retryable) continue;
-      throw new Error(`Gemini chat failed (${model}): ${error}`);
+      throw new Error(lastError);
     }
 
     const payload = await response.json();
@@ -167,14 +167,14 @@ async function answerWithGemini(
     if (text) return text as string;
   }
 
-  return null;
+  throw new Error(lastError);
 }
 
 async function answerWithOpenAI(
   apiKey: string,
   systemPrompt: string,
   userPrompt: string,
-): Promise<string | null> {
+): Promise<string> {
   const response = await fetch('https://api.openai.com/v1/chat/completions', {
     method: 'POST',
     headers: {
@@ -193,8 +193,6 @@ async function answerWithOpenAI(
 
   if (!response.ok) {
     const error = await response.text();
-    const retryable = response.status === 429 || error.includes('insufficient_quota');
-    if (retryable) return null;
     throw new Error(`OpenAI chat failed: ${error}`);
   }
 
@@ -207,8 +205,13 @@ export async function answerWithContext(
   botName: string,
   contextBlocks: string[],
 ): Promise<string> {
+  const groqKey = Deno.env.get('GROQ_API_KEY');
   const geminiKey = Deno.env.get('GEMINI_API_KEY');
   const openaiKey = Deno.env.get('OPENAI_API_KEY');
+
+  if (!contextBlocks.length) {
+    return `I couldn't find this in ${botName}'s knowledge base yet. Upload FAQ or product docs and try again.`;
+  }
 
   const context = contextBlocks.join('\n\n---\n\n');
   const systemPrompt =
@@ -217,26 +220,21 @@ export async function answerWithContext(
     'Keep answers concise, friendly, and accurate.';
   const userPrompt = `Context:\n${context}\n\nQuestion: ${question}`;
 
+  if (groqKey) {
+    return answerWithGroq(groqKey, systemPrompt, userPrompt);
+  }
+
   if (geminiKey) {
-    const geminiAnswer = await answerWithGemini(geminiKey, systemPrompt, userPrompt);
-    if (geminiAnswer) return geminiAnswer;
+    return answerWithGemini(geminiKey, systemPrompt, userPrompt);
   }
 
   if (openaiKey) {
-    const openaiAnswer = await answerWithOpenAI(openaiKey, systemPrompt, userPrompt);
-    if (openaiAnswer) return openaiAnswer;
+    return answerWithOpenAI(openaiKey, systemPrompt, userPrompt);
   }
 
-  if (!contextBlocks.length) {
-    if (!geminiKey && !openaiKey) {
-      throw new Error(
-        'Add GEMINI_API_KEY (free) or OPENAI_API_KEY in Supabase Edge Function secrets',
-      );
-    }
-    return `I couldn't find this in ${botName}'s knowledge base yet. Upload FAQ or product docs and try again.`;
-  }
-
-  return answerFromChunks(botName, question, contextBlocks);
+  throw new Error(
+    'Add GROQ_API_KEY (free) in Supabase Edge Function secrets. Get one at https://console.groq.com/keys',
+  );
 }
 
 export const PLAN_LIMITS = {
