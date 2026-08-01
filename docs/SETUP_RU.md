@@ -23,21 +23,33 @@
 
 ---
 
-## Шаг 1 — OpenAI ключ (обязательно для AI)
+## Шаг 1 — AI ключ (бесплатно через Gemini)
 
-1. Зайди на https://platform.openai.com/api-keys
-2. Создай ключ (можно с лимитом $5)
-3. В Supabase: **Edge Functions → Secrets** (та страница, что ты открыла)
+**Рекомендуем Gemini — бесплатный tier, хватает для демо.**
+
+1. Зайди на https://aistudio.google.com/apikey
+2. **Create API key** → скопируй ключ
+3. В Supabase: **Edge Functions → Secrets**
 4. Нажми **Add or replace secrets**
-5. Вставь **одной строкой** (имя + значение):
+5. Вставь **одной строкой**:
 
 ```
-OPENAI_API_KEY=sk-твой-ключ-здесь
+GEMINI_API_KEY=AIza...твой-ключ
 ```
 
 6. Нажми **Save**
 
-Без этого секрета функции задеployятся, но chat будет падать с ошибкой.
+Загрузка документов теперь **бесплатная** (без embeddings). Ответы в чате идут через Gemini.
+
+### Альтернатива: OpenAI (платно)
+
+Если хочешь OpenAI — нужен баланс на https://platform.openai.com/settings/organization/billing
+
+```
+OPENAI_API_KEY=sk-...
+```
+
+Gemini имеет приоритет, если заданы оба ключа.
 
 ---
 
@@ -98,7 +110,7 @@ npm run dev
 
 То, что ты видишь (`SUPABASE_URL`, `SUPABASE_ANON_KEY` и т.д.) — **уже есть автоматически**. Их добавлять не нужно.
 
-Тебе нужен только **один custom secret**: `OPENAI_API_KEY`.
+Тебе нужен только **один custom secret**: `GEMINI_API_KEY` (бесплатно) или `OPENAI_API_KEY` (платно).
 
 ---
 
@@ -107,7 +119,7 @@ npm run dev
 | Симптом | Решение |
 |---------|---------|
 | «Requested function was not found» | Шаг 2–3: деплой функций |
-| «OPENAI_API_KEY is not configured» | Шаг 1: секрет OpenAI |
+| «OPENAI_API_KEY is not configured» / «Add GEMINI_API_KEY» | Шаг 1: секрет Gemini или OpenAI |
 | Регистрация не пускает | Шаг 4: выключить confirm email |
 | «Unauthorized» в chat | Перелогиниться |
 

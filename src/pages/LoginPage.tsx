@@ -29,7 +29,13 @@ export function LoginPage() {
       return;
     }
 
-    navigate('/app');
+    if (!response.data.session) {
+      setError('Account created, but no session was returned. Try signing in instead.');
+      setMode('sign-in');
+      return;
+    }
+
+    navigate('/app', { replace: true });
   };
 
   return (

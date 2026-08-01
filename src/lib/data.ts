@@ -67,15 +67,33 @@ function mapBot(row: {
   };
 }
 
-export async function fetchProfile(userId: string): Promise<Profile | null> {
+export async function fetchProfile(userId: string, email?: string): Promise<Profile | null> {
   const { data, error } = await supabase
     .from('profiles')
     .select('id, email, plan, messages_used_this_month')
     .eq('id', userId)
+    .maybeSingle();
+
+  if (data) return mapProfile(data);
+
+  if (error && error.code !== 'PGRST116') {
+    console.error('fetchProfile failed', error);
+  }
+
+  if (!email) return null;
+
+  const { data: created, error: insertError } = await supabase
+    .from('profiles')
+    .insert({ id: userId, email })
+    .select('id, email, plan, messages_used_this_month')
     .single();
 
-  if (error || !data) return null;
-  return mapProfile(data);
+  if (insertError || !created) {
+    console.error('ensureProfile failed', insertError);
+    return null;
+  }
+
+  return mapProfile(created);
 }
 
 export async function fetchBots(userId: string): Promise<BotRecord[]> {
@@ -197,14 +215,30 @@ export async function upgradePlan(userId: string, plan: PlanId): Promise<void> {
 
 export async function ensureDemoBot(userId: string): Promise<void> {
   const bots = await fetchBots(userId);
-  if (bots.length > 0) return;
+  let bot = bots.find((item) => item.publicId === 'demo-store-assistant') ?? bots[0];
 
-  const bot = await createBot(userId, 'Store Assistant');
-  await updateBot(userId, bot.id, {
-    publicId: 'demo-store-assistant',
-    welcome: 'Hi! Ask me about shipping, returns, pricing, or support hours.',
-    themeColor: '#1d4ed8',
-  });
+  if (!bot) {
+    bot = await createBot(userId, 'Store Assistant');
+    await updateBot(userId, bot.id, {
+      publicId: 'demo-store-assistant',
+      welcome: 'Hi! Ask me about shipping, returns, pricing, or support hours.',
+      themeColor: '#1d4ed8',
+    });
+  }
+
+  if (bot.chunkCount > 0) return;
+
+  const docs = await fetchDocuments(bot.id);
+
+  if (docs.length === 0) {
+    await ingestDocument(bot.id, 'acme-faq.md', SAMPLE_FAQ);
+    return;
+  }
+
+  const onlyDemoDoc = docs.length === 1 && docs[0].name === 'acme-faq.md';
+  if (!onlyDemoDoc) return;
+
+  await deleteDocument(docs[0].id);
   await ingestDocument(bot.id, 'acme-faq.md', SAMPLE_FAQ);
 }
 

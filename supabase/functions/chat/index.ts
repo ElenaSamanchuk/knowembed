@@ -1,5 +1,5 @@
 import { corsHeaders } from '../_shared/cors.ts';
-import { answerWithContext, embedText, PLAN_LIMITS } from '../_shared/openai.ts';
+import { answerWithContext, findRelevantChunks, PLAN_LIMITS } from '../_shared/ai.ts';
 import { createServiceClient, createUserClient } from '../_shared/supabase.ts';
 
 Deno.serve(async (req) => {
@@ -58,16 +58,7 @@ Deno.serve(async (req) => {
       });
     }
 
-    const queryEmbedding = await embedText(message);
-    const { data: matches, error: matchError } = await serviceClient.rpc('match_chunks', {
-      p_bot_id: botId,
-      p_query_embedding: queryEmbedding,
-      p_match_count: 5,
-    });
-
-    if (matchError) throw matchError;
-
-    const contextBlocks = (matches ?? []).map((item: { content: string }) => item.content);
+    const contextBlocks = await findRelevantChunks(serviceClient, botId, message, 5);
     const answer = contextBlocks.length
       ? await answerWithContext(message, bot.name, contextBlocks)
       : `I couldn't find this in ${bot.name}'s knowledge base yet. Upload FAQ or product docs and try again.`;

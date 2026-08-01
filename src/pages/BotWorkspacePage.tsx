@@ -13,11 +13,12 @@ import {
   type StoredDocument,
   updateBot,
 } from '../lib/data';
+import { SAMPLE_FAQ } from '../data/sampleKnowledge';
 import { PLANS } from '../lib/plans';
 
 export function BotWorkspacePage() {
   const { botId = '' } = useParams();
-  const { user, profile, refreshProfile } = useAuth();
+  const { user, profile, loading, profileLoading, refreshProfile } = useAuth();
   const [bot, setBot] = useState<BotRecord | null>(null);
   const [documents, setDocuments] = useState<StoredDocument[]>([]);
   const [notice, setNotice] = useState('');
@@ -45,6 +46,9 @@ export function BotWorkspacePage() {
     void reload().finally(() => setBusy(false));
   }, [user, botId]);
 
+  if (loading || profileLoading) {
+    return <main className="page-shell"><p className="muted">Loading bot…</p></main>;
+  }
   if (!user || !profile) return <Navigate to="/login" replace />;
   if (busy) return <main className="page-shell"><p className="muted">Loading bot…</p></main>;
   if (!bot) return <Navigate to="/app" replace />;
@@ -52,7 +56,29 @@ export function BotWorkspacePage() {
   const plan = PLANS[profile.plan];
   const canChat = profile.messagesUsedThisMonth < plan.messagesPerMonth;
   const canUpload = documents.length < plan.documents;
+  const knowledgeReady = bot.chunkCount > 0;
+  const chatDisabledReason = !canChat
+    ? 'Monthly answer limit reached. Upgrade to Pro for more answers.'
+    : !knowledgeReady
+      ? 'Knowledge is not indexed yet. Remove the doc and upload it again, or wait a moment while we re-index.'
+      : undefined;
   const embedSnippet = buildEmbedSnippet(origin, bot.publicId);
+
+  const handleReindexDemo = async () => {
+    setUploading(true);
+    try {
+      for (const doc of documents) {
+        await deleteDocument(doc.id);
+      }
+      await ingestDocument(bot.id, 'acme-faq.md', SAMPLE_FAQ);
+      await reload();
+      setNotice('Knowledge indexed. You can chat now.');
+    } catch (error) {
+      setNotice(error instanceof Error ? error.message : 'Re-index failed');
+    } finally {
+      setUploading(false);
+    }
+  };
 
   const saveSettings = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
@@ -196,6 +222,19 @@ export function BotWorkspacePage() {
 
           <section className="panel-card">
             <h2>Test chat</h2>
+            {!knowledgeReady ? (
+              <div className="notice stack">
+                <p>Chat is locked until your docs are indexed for AI search (currently {bot.chunkCount} chunks).</p>
+                <button
+                  type="button"
+                  className="btn btn-secondary"
+                  disabled={uploading}
+                  onClick={() => void handleReindexDemo()}
+                >
+                  {uploading ? 'Indexing…' : 'Re-index demo FAQ'}
+                </button>
+              </div>
+            ) : null}
             {!canChat ? (
               <div className="notice">
                 Monthly answer limit reached.{' '}
@@ -205,7 +244,8 @@ export function BotWorkspacePage() {
             <ChatPanel
               botId={bot.id}
               welcome={bot.welcome}
-              disabled={!canChat || bot.chunkCount === 0}
+              disabled={!canChat || !knowledgeReady}
+              disabledReason={chatDisabledReason}
               onAnswered={refreshProfile}
             />
           </section>

@@ -11,10 +11,11 @@ type ChatPanelProps = {
   botId: string;
   welcome: string;
   disabled?: boolean;
+  disabledReason?: string;
   onAnswered?: () => void;
 };
 
-export function ChatPanel({ botId, welcome, disabled, onAnswered }: ChatPanelProps) {
+export function ChatPanel({ botId, welcome, disabled, disabledReason, onAnswered }: ChatPanelProps) {
   const [messages, setMessages] = useState<ChatMessage[]>([
     { id: 'welcome', role: 'assistant', content: welcome },
   ]);
@@ -65,6 +66,7 @@ export function ChatPanel({ botId, welcome, disabled, onAnswered }: ChatPanelPro
         <div ref={endRef} />
       </div>
       {error ? <p className="form-error chat-error">{error}</p> : null}
+      {disabled && disabledReason ? <p className="chat-disabled-note">{disabledReason}</p> : null}
       <form
         className="chat-input-row"
         onSubmit={(event) => {

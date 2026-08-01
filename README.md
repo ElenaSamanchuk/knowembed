@@ -5,7 +5,8 @@ MVP for [Paralect Product Academy — Embeddable Chatbot Builder](https://www.pa
 ## Stack (matches assignment)
 
 - **Supabase** — auth, Postgres, pgvector, Edge Functions
-- **OpenAI** — embeddings (`text-embedding-3-small`) + chat (`gpt-4o-mini`)
+- **Gemini** (free tier) or **OpenAI** — chat answers
+- **Keyword search** — finds relevant doc chunks (no paid embeddings)
 - **Vite + React** — landing, dashboard, bot workspace
 - **Vanilla widget** — embeddable script for client sites
 
@@ -13,8 +14,8 @@ MVP for [Paralect Product Academy — Embeddable Chatbot Builder](https://www.pa
 
 - Landing + pricing + mock Stripe checkout
 - Email/password auth via Supabase
-- Upload `.txt` / `.md` docs → chunked + embedded
-- In-app AI chat (vector search + GPT)
+- Upload `.txt` / `.md` docs → chunked for search
+- In-app AI chat (keyword retrieval + Gemini/OpenAI)
 - Publish bot → embed widget calls Supabase Edge Functions
 - Plan limits (Starter vs Pro)
 
@@ -31,7 +32,7 @@ npm install
 npm run dev
 ```
 
-Run the SQL migration in Supabase dashboard, add `OPENAI_API_KEY` secret, deploy Edge Functions.
+Run the SQL migration in Supabase dashboard, add `GEMINI_API_KEY` (free) or `OPENAI_API_KEY` secret, deploy Edge Functions.
 
 ## Repo
 

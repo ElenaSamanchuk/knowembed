@@ -15,6 +15,7 @@ type AuthContextValue = {
   user: User | null;
   profile: Profile | null;
   loading: boolean;
+  profileLoading: boolean;
   refreshProfile: () => Promise<void>;
   signOut: () => Promise<void>;
 };
@@ -25,14 +26,23 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const [session, setSession] = useState<Session | null>(null);
   const [profile, setProfile] = useState<Profile | null>(null);
   const [loading, setLoading] = useState(true);
+  const [profileLoading, setProfileLoading] = useState(false);
 
-  const refreshProfile = async () => {
-    if (!session?.user) {
+  const refreshProfile = async (currentSession = session) => {
+    if (!currentSession?.user) {
       setProfile(null);
       return;
     }
-    const next = await fetchProfile(session.user.id);
-    setProfile(next);
+    setProfileLoading(true);
+    try {
+      const next = await fetchProfile(
+        currentSession.user.id,
+        currentSession.user.email ?? undefined,
+      );
+      setProfile(next);
+    } finally {
+      setProfileLoading(false);
+    }
   };
 
   useEffect(() => {
@@ -58,13 +68,33 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   useEffect(() => {
     if (!session?.user) {
       setProfile(null);
+      setProfileLoading(false);
       return;
     }
 
+    let active = true;
+
     void (async () => {
-      await ensureDemoBot(session.user.id);
-      await refreshProfile();
+      setProfileLoading(true);
+      try {
+        const next = await fetchProfile(
+          session.user.id,
+          session.user.email ?? undefined,
+        );
+        if (!active) return;
+        setProfile(next);
+
+        if (next) {
+          await ensureDemoBot(session.user.id);
+        }
+      } finally {
+        if (active) setProfileLoading(false);
+      }
     })();
+
+    return () => {
+      active = false;
+    };
   }, [session?.user?.id]);
 
   const value = useMemo<AuthContextValue>(
@@ -73,12 +103,13 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       user: session?.user ?? null,
       profile,
       loading,
-      refreshProfile,
+      profileLoading,
+      refreshProfile: () => refreshProfile(session),
       signOut: async () => {
         await supabase.auth.signOut();
       },
     }),
-    [session, profile, loading],
+    [session, profile, loading, profileLoading],
   );
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
