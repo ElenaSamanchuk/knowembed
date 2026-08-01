@@ -11,17 +11,17 @@ export function SiteHeader() {
       </Link>
       <nav className="site-nav">
         <Link to="/pricing">Pricing</Link>
-        <Link to="/docs/demo.html">Demo guide</Link>
+        <Link to="/guide">Demo guide</Link>
         {!loading && user ? (
-          <Link to="/app" className="btn btn-primary">
+          <Link to="/app" className="btn btn-primary nav-cta">
             Dashboard
           </Link>
         ) : (
           <>
-            <Link to="/login" className="btn btn-secondary">
+            <Link to="/login" className="btn btn-secondary nav-cta">
               Sign in
             </Link>
-            <Link to="/login" className="btn btn-primary">
+            <Link to="/login" className="btn btn-primary nav-cta">
               Start free
             </Link>
           </>

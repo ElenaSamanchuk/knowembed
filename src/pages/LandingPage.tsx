@@ -2,40 +2,69 @@ import { Link } from 'react-router-dom';
 import { SiteHeader } from '../components/SiteHeader';
 import { PLANS } from '../lib/plans';
 
+const STEPS = [
+  { n: '01', title: 'Upload docs', text: 'FAQ, pricing, policies → Postgres chunks' },
+  { n: '02', title: 'Test with AI', text: 'ChatGPT-like workspace, Groq LLM + your context' },
+  { n: '03', title: 'Embed on site', text: 'One script tag, Shadow DOM widget' },
+];
+
 export function LandingPage() {
   return (
     <>
       <SiteHeader />
       <main className="landing">
-        <section className="hero-block">
-          <p className="eyebrow">Docs → chatbot → embed</p>
-          <h1>Turn company knowledge into an embeddable AI assistant.</h1>
-          <p className="lead">
-            Upload FAQ and policies to Supabase, test answers in a ChatGPT-like workspace,
-            publish one script tag for your website. Built as a launch-ready MVP.
-          </p>
-          <div className="hero-actions">
-            <Link to="/login" className="btn btn-primary">
-              Start free
-            </Link>
-            <Link to="/pricing" className="btn btn-ghost">
-              View pricing
-            </Link>
+        <section className="hero-block hero-block--mvp">
+          <div className="hero-copy">
+            <p className="mvp-badge">Launch-ready MVP · not a mockup</p>
+            <p className="eyebrow">Docs → chatbot → embed</p>
+            <h1>Ship an AI support bot your customers can embed.</h1>
+            <p className="lead lead--spaced">
+              KnowEmbed is a minimal product: Supabase backend, real RAG chat, Stripe billing,
+              and a production-style widget — built to demo like Platformax or Sender, not a toy UI.
+            </p>
+            <div className="stack-badges">
+              <span>Supabase</span>
+              <span>Groq AI</span>
+              <span>Stripe</span>
+              <span>Edge Functions</span>
+            </div>
+            <div className="hero-actions">
+              <Link to="/login" className="btn btn-primary btn-lg">
+                Start free
+              </Link>
+              <Link to="/pricing" className="btn btn-ghost btn-lg">
+                View pricing
+              </Link>
+            </div>
+          </div>
+          <div className="hero-panel panel-card">
+            <p className="eyebrow">Live pipeline</p>
+            <ol className="pipeline-list">
+              {STEPS.map((step) => (
+                <li key={step.n}>
+                  <span className="pipeline-num">{step.n}</span>
+                  <div>
+                    <strong>{step.title}</strong>
+                    <p className="muted">{step.text}</p>
+                  </div>
+                </li>
+              ))}
+            </ol>
           </div>
         </section>
 
         <section className="feature-grid">
           <article className="feature-card">
-            <h2>Upload knowledge</h2>
-            <p>Drop FAQ, pricing, policies (.txt / .md). Chunks are stored in Postgres and indexed for search.</p>
+            <h2>Real database</h2>
+            <p>Auth, bots, documents, chunks in Supabase Postgres with RLS — not localStorage.</p>
           </article>
           <article className="feature-card">
-            <h2>Chat inside the app</h2>
-            <p>Validate answers before going live — Groq LLM with your doc context (real RAG pipeline).</p>
+            <h2>Real AI</h2>
+            <p>Retrieve chunks from DB, generate answers with Groq Llama 3.3 (free tier).</p>
           </article>
           <article className="feature-card">
-            <h2>Embed anywhere</h2>
-            <p>Copy one script tag. Widget calls Supabase Edge Functions — same answers as in-app chat.</p>
+            <h2>Real billing</h2>
+            <p>Stripe Checkout test mode for Pro. Limits enforced server-side.</p>
           </article>
         </section>
 
@@ -57,15 +86,13 @@ export function LandingPage() {
         </section>
 
         <section className="cta-band">
-          <h2>Written walkthrough instead of video</h2>
-          <p>
-            Full demo guide with screenshots: signup → upload → chat → publish → embed widget → pricing.
-          </p>
-          <div className="hero-actions">
-            <Link to="/docs/demo.html" className="btn btn-ghost">
+          <h2>Full written walkthrough — no video required</h2>
+          <p>Step-by-step guide with screenshots for Paralect review and your portfolio.</p>
+          <div className="hero-actions cta-band-actions">
+            <Link to="/guide" className="btn btn-ghost btn-lg cta-ghost">
               Read demo guide
             </Link>
-            <Link to="/login" className="btn btn-primary">
+            <Link to="/login" className="btn btn-primary btn-lg cta-primary">
               Create account
             </Link>
           </div>

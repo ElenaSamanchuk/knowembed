@@ -42,10 +42,12 @@ export function LoginPage() {
     <>
       <SiteHeader />
       <main className="page-shell narrow">
-        <header className="page-heading">
+        <header className="page-heading page-heading--spaced">
           <p className="eyebrow">Sign in</p>
           <h1>Start building your embeddable bot</h1>
-          <p className="lead">Supabase Postgres + Groq AI with your docs as context.</p>
+          <p className="lead lead--spaced">
+            Supabase Postgres + Groq AI with your docs as context.
+          </p>
         </header>
 
         <form className="panel-card stack" onSubmit={(event) => void submit(event)}>

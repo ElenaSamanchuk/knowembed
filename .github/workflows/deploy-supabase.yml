@@ -27,3 +27,5 @@ jobs:
           supabase functions deploy publish-bot --project-ref buwxmfapwampgpwvnulb
           supabase functions deploy public-chat --project-ref buwxmfapwampgpwvnulb
           supabase functions deploy public-bot --project-ref buwxmfapwampgpwvnulb
+          supabase functions deploy create-checkout-session --project-ref buwxmfapwampgpwvnulb
+          supabase functions deploy stripe-webhook --project-ref buwxmfapwampgpwvnulb --no-verify-jwt

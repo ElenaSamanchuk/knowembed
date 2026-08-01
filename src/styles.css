@@ -37,6 +37,35 @@ a {
   color: #1d4ed8;
 }
 
+a.btn,
+.btn {
+  text-decoration: none;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+}
+
+.site-nav .btn-primary,
+.site-nav .nav-cta.btn-primary {
+  color: #fff;
+}
+
+.site-nav .btn-primary:hover,
+.site-nav .nav-cta.btn-primary:hover {
+  color: #fff;
+  filter: brightness(1.05);
+}
+
+.btn-lg {
+  padding: 12px 20px;
+  font-size: 1rem;
+}
+
+.btn-block {
+  width: 100%;
+}
+
 .app-shell {
   max-width: 1180px;
   margin: 0 auto;
@@ -404,9 +433,24 @@ a {
   color: rgba(255, 255, 255, 0.88);
 }
 
-.cta-band .btn-primary {
+.cta-band .btn-primary.cta-primary {
   background: #fff;
   color: #1d4ed8;
+}
+
+.cta-band .btn-ghost.cta-ghost {
+  color: #fff;
+  border-color: rgba(255, 255, 255, 0.45);
+  background: rgba(255, 255, 255, 0.08);
+}
+
+.cta-band .btn-ghost.cta-ghost:hover {
+  background: rgba(255, 255, 255, 0.14);
+  color: #fff;
+}
+
+.cta-band-actions {
+  justify-content: center;
 }
 
 .page-shell {
@@ -420,8 +464,33 @@ a {
 }
 
 .page-heading h1 {
-  margin: 0 0 8px;
+  margin: 0 0 12px;
   font-size: clamp(1.8rem, 4vw, 2.4rem);
+}
+
+.page-heading--spaced {
+  margin-bottom: 32px;
+}
+
+.lead--spaced {
+  margin-top: 0;
+  margin-bottom: 28px;
+  max-width: 52ch;
+}
+
+.section-foot {
+  margin-top: 32px;
+}
+
+.notice--error {
+  background: #fef2f2;
+  border-color: #fecaca;
+  color: #991b1b;
+  margin-bottom: 20px;
+}
+
+.billing-note {
+  margin-top: 24px;
 }
 
 .page-heading.inline {
@@ -725,4 +794,128 @@ a {
 .chat-error {
   margin: 0;
   padding: 0 12px 8px;
+}
+
+.hero-block--mvp {
+  display: grid;
+  grid-template-columns: 1.1fr 0.9fr;
+  gap: 28px;
+  align-items: start;
+  padding-bottom: 48px;
+}
+
+@media (max-width: 900px) {
+  .hero-block--mvp {
+    grid-template-columns: 1fr;
+  }
+}
+
+.mvp-badge {
+  display: inline-block;
+  margin: 0 0 12px;
+  padding: 6px 12px;
+  border-radius: 999px;
+  background: #dbeafe;
+  color: #1e40af;
+  font-size: 0.82rem;
+  font-weight: 600;
+}
+
+.stack-badges {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-bottom: 24px;
+}
+
+.stack-badges span {
+  padding: 6px 10px;
+  border-radius: 999px;
+  background: #fff;
+  border: 1px solid #dbe2ea;
+  font-size: 0.82rem;
+  color: #475569;
+  font-weight: 600;
+}
+
+.hero-panel {
+  padding: 24px;
+}
+
+.pipeline-list {
+  list-style: none;
+  margin: 16px 0 0;
+  padding: 0;
+  display: grid;
+  gap: 16px;
+}
+
+.pipeline-list li {
+  display: flex;
+  gap: 14px;
+  align-items: flex-start;
+}
+
+.pipeline-list p {
+  margin: 4px 0 0;
+}
+
+.pipeline-num {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 0.78rem;
+  color: #2563eb;
+  font-weight: 600;
+  min-width: 2rem;
+}
+
+.guide-page {
+  max-width: 820px;
+}
+
+.guide-steps {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  gap: 20px;
+}
+
+.guide-step h2 {
+  margin: 0 0 8px;
+}
+
+.guide-expected {
+  padding: 12px 14px;
+  border-radius: 12px;
+  background: #f8fafc;
+  border: 1px solid #e2e8f0;
+}
+
+.guide-shot {
+  margin: 16px 0 0;
+}
+
+.guide-shot-placeholder {
+  min-height: 200px;
+  border-radius: 16px;
+  border: 1px dashed #cbd5e1;
+  background: linear-gradient(145deg, #f8fafc, #eef2f7);
+  display: grid;
+  place-content: center;
+  gap: 6px;
+  text-align: center;
+  padding: 24px;
+  color: #475569;
+  font-weight: 600;
+}
+
+.guide-meta h2 {
+  margin: 0 0 8px;
+}
+
+@media (max-width: 700px) {
+  .site-nav {
+    flex-wrap: wrap;
+    justify-content: flex-end;
+  }
 }

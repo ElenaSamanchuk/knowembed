@@ -1,3 +1,4 @@
+import { useEffect } from 'react';
 import { Link, Navigate, useSearchParams } from 'react-router-dom';
 import { SiteHeader } from '../components/SiteHeader';
 import { useAuth } from '../context/AuthProvider';
@@ -5,9 +6,14 @@ import { PLANS } from '../lib/plans';
 
 export function CheckoutPage() {
   const [params] = useSearchParams();
-  const { user, profile, loading } = useAuth();
-  const planId = params.get('plan') === 'pro' ? 'pro' : 'starter';
+  const { user, profile, loading, refreshProfile } = useAuth();
+  const success = params.get('success') === '1';
+  const planId = params.get('plan') === 'pro' || success ? 'pro' : 'starter';
   const plan = PLANS[planId];
+
+  useEffect(() => {
+    if (success) void refreshProfile();
+  }, [success, refreshProfile]);
 
   if (loading) return <main className="page-shell"><p className="muted">Loading…</p></main>;
   if (!user || !profile) return <Navigate to="/login" replace />;
@@ -16,10 +22,14 @@ export function CheckoutPage() {
     <>
       <SiteHeader />
       <main className="page-shell narrow">
-        <header className="page-heading">
-          <p className="eyebrow">Stripe test checkout</p>
-          <h1>Upgrade to {plan.name}</h1>
-          <p className="lead">Mock billing flow. Your Supabase profile plan is already updated.</p>
+        <header className="page-heading page-heading--spaced">
+          <p className="eyebrow">{success ? 'Payment successful' : 'Checkout'}</p>
+          <h1>{success ? `Welcome to ${plan.name}` : `Upgrade to ${plan.name}`}</h1>
+          <p className="lead lead--spaced">
+            {success
+              ? 'Stripe confirmed your subscription. Your workspace limits are updated via webhook.'
+              : 'Complete checkout on the pricing page to upgrade.'}
+          </p>
         </header>
 
         <section className="panel-card stack checkout-card">
@@ -27,14 +37,14 @@ export function CheckoutPage() {
             <span>{plan.name} subscription</span>
             <strong>{plan.price === 0 ? 'Free' : `$${plan.price} / month`}</strong>
           </div>
-          <div className="checkout-line muted">
-            <span>Test card</span>
-            <code>4242 4242 4242 4242</code>
-          </div>
-          <div className="checkout-success">
-            Payment simulated — your workspace is now on <strong>{profile.plan}</strong>.
-          </div>
-          <Link to="/app" className="btn btn-primary">
+          {success ? (
+            <div className="checkout-success">
+              Active plan: <strong>{profile.plan}</strong>. Pro removes widget branding and raises limits.
+            </div>
+          ) : (
+            <p className="muted">No active checkout session. Start from pricing.</p>
+          )}
+          <Link to="/app" className="btn btn-primary btn-block">
             Back to dashboard
           </Link>
         </section>

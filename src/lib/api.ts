@@ -23,6 +23,18 @@ export async function ingestDocument(botId: string, name: string, content: strin
   if (!response.ok) throw new Error(payload.error ?? 'Failed to ingest document');
 }
 
+export async function createCheckoutSession(origin: string): Promise<string> {
+  const response = await fetch(functionsUrl('create-checkout-session'), {
+    method: 'POST',
+    headers: await authHeaders(),
+    body: JSON.stringify({ origin }),
+  });
+
+  const payload = await response.json();
+  if (!response.ok) throw new Error(payload.error ?? 'Checkout failed');
+  return payload.url as string;
+}
+
 export async function chatWithBot(botId: string, message: string): Promise<string> {
   const response = await fetch(functionsUrl('chat'), {
     method: 'POST',
