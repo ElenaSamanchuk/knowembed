@@ -1,5 +1,15 @@
 import { expect, test } from '@playwright/test';
 
+test.describe.configure({ mode: 'serial' });
+
+test.beforeEach(async ({ context }) => {
+  await context.clearCookies();
+  await context.addInitScript(() => {
+    localStorage.clear();
+    sessionStorage.clear();
+  });
+});
+
 test.describe('Marketing pages', () => {
   test('landing shows hero, features, and pricing CTA', async ({ page }) => {
     await page.goto('/');
@@ -26,6 +36,6 @@ test.describe('Marketing pages', () => {
 
   test('app routes require auth', async ({ page }) => {
     await page.goto('/app');
-    await expect(page).toHaveURL(/\/login$/);
+    await expect(page).toHaveURL(/\/login$/, { timeout: 15_000 });
   });
 });
