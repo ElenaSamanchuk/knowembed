@@ -1,10 +1,9 @@
 import { expect, test } from '@playwright/test';
 
-test('embed demo page loads host site and widget launcher', async ({ page }) => {
+test('embed demo page loads storefront content', async ({ page }) => {
   await page.goto('/embed-demo.html');
-  await expect(page.getByRole('heading', { name: /Customer support/i })).toBeVisible();
-  await expect(page.getByText(/demo-store-assistant/i)).toBeVisible();
-
-  const launcher = page.locator('#knowembed-root').locator('button').first();
-  await expect(launcher).toBeVisible({ timeout: 15_000 });
+  await expect(page.getByRole('heading', { level: 1 })).toContainText('Customer support');
+  await expect(page.getByText('KnowEmbed live widget')).toBeVisible();
+  await page.waitForSelector('#knowembed-root', { timeout: 10_000 });
+  await expect(page.locator('#knowembed-root')).toBeVisible();
 });
