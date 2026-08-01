@@ -1,6 +1,11 @@
 import type { SupabaseClient } from 'jsr:@supabase/supabase-js@2';
 
-const GEMINI_MODEL = 'gemini-2.0-flash';
+const GEMINI_MODELS = [
+  'gemini-1.5-flash',
+  'gemini-2.0-flash-lite',
+  'gemini-1.5-flash-8b',
+  'gemini-2.0-flash',
+] as const;
 const OPENAI_CHAT_MODEL = 'gpt-4o-mini';
 
 export function chunkText(text: string, documentId: string, documentName: string, size = 700) {
@@ -85,49 +90,91 @@ export async function findRelevantChunks(
   return chunks.slice(0, limit).map((chunk) => chunk.content);
 }
 
+function answerFromChunks(botName: string, question: string, contextBlocks: string[]): string {
+  if (!contextBlocks.length) {
+    return `I couldn't find this in ${botName}'s knowledge base yet. Upload FAQ or product docs and try again.`;
+  }
+
+  const terms = question
+    .toLowerCase()
+    .split(/[^\p{L}\p{N}]+/u)
+    .filter((term) => term.length > 2);
+
+  const lines = contextBlocks
+    .flatMap((block) => block.split('\n'))
+    .map((line) => line.trim())
+    .filter((line) => line.length > 0 && !line.startsWith('#'));
+
+  const scored = lines
+    .map((line) => {
+      const haystack = line.toLowerCase();
+      const score = terms.reduce((total, term) => total + (haystack.includes(term) ? 1 : 0), 0);
+      return { line, score };
+    })
+    .sort((left, right) => right.score - left.score);
+
+  const best = scored.find((item) => item.score > 0)?.line ?? lines[0];
+  if (!best) {
+    return contextBlocks[0].replace(/^#+\s+/gm, '').trim();
+  }
+
+  return best;
+}
+
+function geminiModelsToTry(): string[] {
+  const preferred = Deno.env.get('GEMINI_MODEL')?.trim();
+  if (preferred) return [preferred, ...GEMINI_MODELS.filter((model) => model !== preferred)];
+  return [...GEMINI_MODELS];
+}
+
 async function answerWithGemini(
   apiKey: string,
   systemPrompt: string,
   userPrompt: string,
-): Promise<string> {
-  const response = await fetch(
-    `https://generativelanguage.googleapis.com/v1beta/models/${GEMINI_MODEL}:generateContent?key=${apiKey}`,
-    {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        systemInstruction: {
-          parts: [{ text: systemPrompt }],
-        },
-        contents: [
-          {
-            role: 'user',
-            parts: [{ text: userPrompt }],
+): Promise<string | null> {
+  for (const model of geminiModelsToTry()) {
+    const response = await fetch(
+      `https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${apiKey}`,
+      {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          systemInstruction: {
+            parts: [{ text: systemPrompt }],
           },
-        ],
-        generationConfig: {
-          temperature: 0.2,
-        },
-      }),
-    },
-  );
+          contents: [
+            {
+              role: 'user',
+              parts: [{ text: userPrompt }],
+            },
+          ],
+          generationConfig: {
+            temperature: 0.2,
+          },
+        }),
+      },
+    );
 
-  if (!response.ok) {
-    const error = await response.text();
-    throw new Error(`Gemini chat failed: ${error}`);
+    if (!response.ok) {
+      const error = await response.text();
+      const retryable = response.status === 429 || error.includes('RESOURCE_EXHAUSTED');
+      if (retryable) continue;
+      throw new Error(`Gemini chat failed (${model}): ${error}`);
+    }
+
+    const payload = await response.json();
+    const text = payload.candidates?.[0]?.content?.parts?.[0]?.text;
+    if (text) return text as string;
   }
 
-  const payload = await response.json();
-  const text = payload.candidates?.[0]?.content?.parts?.[0]?.text;
-  if (!text) throw new Error('Gemini returned an empty answer');
-  return text as string;
+  return null;
 }
 
 async function answerWithOpenAI(
   apiKey: string,
   systemPrompt: string,
   userPrompt: string,
-): Promise<string> {
+): Promise<string | null> {
   const response = await fetch('https://api.openai.com/v1/chat/completions', {
     method: 'POST',
     headers: {
@@ -146,6 +193,8 @@ async function answerWithOpenAI(
 
   if (!response.ok) {
     const error = await response.text();
+    const retryable = response.status === 429 || error.includes('insufficient_quota');
+    if (retryable) return null;
     throw new Error(`OpenAI chat failed: ${error}`);
   }
 
@@ -169,16 +218,25 @@ export async function answerWithContext(
   const userPrompt = `Context:\n${context}\n\nQuestion: ${question}`;
 
   if (geminiKey) {
-    return answerWithGemini(geminiKey, systemPrompt, userPrompt);
+    const geminiAnswer = await answerWithGemini(geminiKey, systemPrompt, userPrompt);
+    if (geminiAnswer) return geminiAnswer;
   }
 
   if (openaiKey) {
-    return answerWithOpenAI(openaiKey, systemPrompt, userPrompt);
+    const openaiAnswer = await answerWithOpenAI(openaiKey, systemPrompt, userPrompt);
+    if (openaiAnswer) return openaiAnswer;
   }
 
-  throw new Error(
-    'Add GEMINI_API_KEY (free) or OPENAI_API_KEY in Supabase Edge Function secrets',
-  );
+  if (!contextBlocks.length) {
+    if (!geminiKey && !openaiKey) {
+      throw new Error(
+        'Add GEMINI_API_KEY (free) or OPENAI_API_KEY in Supabase Edge Function secrets',
+      );
+    }
+    return `I couldn't find this in ${botName}'s knowledge base yet. Upload FAQ or product docs and try again.`;
+  }
+
+  return answerFromChunks(botName, question, contextBlocks);
 }
 
 export const PLAN_LIMITS = {
