@@ -26,7 +26,6 @@ async function signIn(page: Page) {
     throw new Error('Set TEST_USER_EMAIL and TEST_USER_PASSWORD for authenticated screenshots');
   }
   await page.goto('/login');
-  await page.getByRole('button', { name: 'Sign in' }).click();
   await page.getByLabel('Work email').fill(email);
   await page.getByLabel('Password').fill(password);
   await page.getByRole('button', { name: 'Sign in' }).click();
@@ -40,7 +39,7 @@ test('capture demo guide screenshots', async ({ page }) => {
   await expect(page.getByRole('heading', { level: 1 })).toBeVisible();
   await shot(page, '01-landing.png');
 
-  await page.goto('/login');
+  await page.goto('/signup');
   await expect(page.getByRole('button', { name: 'Create account' })).toBeVisible();
   await shot(page, '02-signup.png');
 

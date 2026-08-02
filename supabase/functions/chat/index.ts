@@ -59,7 +59,7 @@ Deno.serve(async (req) => {
       });
     }
 
-    const contextBlocks = await findRelevantChunks(serviceClient, botId, message, 5);
+    const contextBlocks = await findRelevantChunks(serviceClient, botId, message, 8);
     const answer = contextBlocks.length
       ? await answerWithContext(message, bot.name, contextBlocks)
       : `I couldn't find this in ${bot.name}'s knowledge base yet. Upload FAQ or product docs and try again.`;

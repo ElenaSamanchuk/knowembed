@@ -33,26 +33,30 @@
   style.textContent =
     ':host { all: initial; }' +
     '* { box-sizing: border-box; font-family: "Manrope", system-ui, sans-serif; }' +
-    '.launcher { position: fixed; right: max(16px, env(safe-area-inset-right)); bottom: max(16px, env(safe-area-inset-bottom)); width: 56px; height: 56px; border: 1px solid #222; border-radius: 50%; color: #fff; background: #01b6ca; cursor: pointer; box-shadow: 0 8px 24px rgba(0,0,0,0.4); z-index: 2147483000; display: grid; place-items: center; transition: transform .2s cubic-bezier(0.16,1,0.3,1), box-shadow .2s; }' +
-    '.launcher:hover { transform: translateY(-2px); box-shadow: 0 12px 32px rgba(1,182,202,0.35); }' +
+    '.launcher { position: fixed; right: max(16px, env(safe-area-inset-right)); bottom: max(16px, env(safe-area-inset-bottom)); width: 56px; height: 56px; border: none; border-radius: 50%; color: #fff; background: #5089fd; cursor: pointer; box-shadow: 0 8px 24px rgba(80,137,253,0.35); z-index: 2147483000; display: grid; place-items: center; transition: transform .2s cubic-bezier(0.16,1,0.3,1), box-shadow .2s; }' +
+    '.launcher:hover { transform: translateY(-2px); box-shadow: 0 12px 32px rgba(80,137,253,0.4); }' +
+    '.launcher:active { transform: translateY(0) scale(0.96); }' +
     '.launcher:disabled { opacity: .55; cursor: not-allowed; transform: none; }' +
-    '.panel { position: fixed; right: max(16px, env(safe-area-inset-right)); bottom: calc(max(16px, env(safe-area-inset-bottom)) + 56px + 12px); width: min(380px, calc(100vw - 32px)); height: min(520px, calc(100dvh - 120px)); border-radius: 20px; overflow: hidden; display: none; flex-direction: column; background: #0e0e0e; border: 1px solid #222; box-shadow: 0 10px 50px rgba(0,0,0,0.2), 0 0 0 1px rgba(255,255,255,0.04); z-index: 2147483000; }' +
+    '.panel { position: fixed; right: max(16px, env(safe-area-inset-right)); bottom: calc(max(16px, env(safe-area-inset-bottom)) + 56px + 12px); width: min(380px, calc(100vw - 32px)); height: min(520px, calc(100dvh - 120px)); border-radius: 20px; overflow: hidden; display: none; flex-direction: column; background: #fff; border: 1px solid #e4eaf5; box-shadow: 0 16px 48px rgba(51,82,143,0.18); z-index: 2147483000; }' +
     '.panel.open { display: flex; animation: knowembed-in .28s cubic-bezier(0.16,1,0.3,1); }' +
     '@keyframes knowembed-in { from { opacity: 0; transform: translateY(10px) scale(0.98); } to { opacity: 1; transform: translateY(0) scale(1); } }' +
     '@media (max-width: 480px) { .panel { right: 12px; left: 12px; width: auto; bottom: calc(16px + 56px + 12px); height: min(70dvh, 520px); } .launcher { right: 16px; bottom: 16px; } }' +
-    '.head { padding: 16px 18px; color: #fff; display: flex; justify-content: space-between; align-items: center; gap: 12px; background: #0b2631; border-bottom: 1px solid #222; }' +
+    '.head { padding: 16px 18px; color: #fff; display: flex; justify-content: space-between; align-items: center; gap: 12px; background: #5089fd; border-bottom: 1px solid rgba(255,255,255,0.15); }' +
     '.head strong { font-size: 0.95rem; font-weight: 700; }' +
-    '.head button { border: 0; background: rgba(255,255,255,0.12); color: #fff; width: 32px; height: 32px; border-radius: 10px; cursor: pointer; font-size: 1.2rem; line-height: 1; }' +
-    '.messages { flex: 1; overflow: auto; padding: 16px; background: #000; display: flex; flex-direction: column; gap: 10px; }' +
+    '.head button { border: 0; background: rgba(255,255,255,0.2); color: #fff; width: 32px; height: 32px; border-radius: 10px; cursor: pointer; font-size: 1.2rem; line-height: 1; transition: background .15s; }' +
+    '.head button:hover { background: rgba(255,255,255,0.3); }' +
+    '.messages { flex: 1; overflow: auto; padding: 16px; background: #f4f6fa; display: flex; flex-direction: column; gap: 10px; }' +
     '.msg { max-width: 88%; padding: 10px 12px; border-radius: 14px; line-height: 1.45; font-size: 0.88rem; white-space: pre-wrap; }' +
-    '.msg.bot { align-self: flex-start; background: #0e0e0e; border: 1px solid #222; color: #fff; }' +
-    '.msg.user { align-self: flex-end; color: #fff; background: #01b6ca; }' +
-    '.composer { padding: 12px 14px 14px; border-top: 1px solid #222; background: #0e0e0e; display: flex; gap: 8px; }' +
-    '.composer input { flex: 1; border: 1px solid #222; border-radius: 12px; padding: 10px 12px; font-size: 0.88rem; background: #000; color: #fff; }' +
-    '.composer input::placeholder { color: #969aa1; }' +
-    '.composer input:focus { outline: 2px solid rgba(1,182,202,0.35); border-color: #01b6ca; }' +
-    '.composer button { border: 0; border-radius: 12px; padding: 10px 14px; color: #fff; font-weight: 600; cursor: pointer; background: #01b6ca; }' +
-    '.badge { font-size: 0.72rem; text-align: center; padding: 8px; color: #969aa1; border-top: 1px solid #222; background: #0e0e0e; font-family: "JetBrains Mono", monospace; }';
+    '.msg.bot { align-self: flex-start; background: #fff; border: 1px solid #e4eaf5; color: #222; }' +
+    '.msg.user { align-self: flex-end; color: #fff; background: #5089fd; }' +
+    '.composer { padding: 12px 14px 14px; border-top: 1px solid #e4eaf5; background: #fff; display: flex; gap: 8px; }' +
+    '.composer input { flex: 1; border: 1px solid #e4eaf5; border-radius: 12px; padding: 10px 12px; font-size: 0.88rem; background: #fff; color: #222; }' +
+    '.composer input::placeholder { color: #858a9d; }' +
+    '.composer input:focus { outline: 2px solid rgba(80,137,253,0.25); border-color: #5089fd; }' +
+    '.composer button { border: 0; border-radius: 12px; padding: 10px 14px; color: #fff; font-weight: 600; cursor: pointer; background: #5089fd; transition: background .15s, transform .15s; }' +
+    '.composer button:hover { background: #3d7aed; }' +
+    '.composer button:active { transform: scale(0.97); }' +
+    '.badge { font-size: 0.72rem; text-align: center; padding: 8px; color: #858a9d; border-top: 1px solid #e4eaf5; background: #fff; font-family: "JetBrains Mono", monospace; }';
 
   shadow.appendChild(style);
 
@@ -68,7 +72,7 @@
 
   const head = document.createElement('header');
   head.className = 'head';
-  head.innerHTML = '<div><strong>Chat</strong><div style="font-size:12px;opacity:.85">AI assistant</div></div>';
+  head.innerHTML = '<div><strong>Chat</strong><div style="font-size:12px;opacity:.9">AI assistant</div></div>';
 
   const closeBtn = document.createElement('button');
   closeBtn.type = 'button';

@@ -1,5 +1,6 @@
 import { FormEvent, useEffect, useState } from 'react';
 import { Link, Navigate, useParams } from 'react-router-dom';
+import { AppShell } from '../components/AppShell';
 import { ChatPanel } from '../components/ChatPanel';
 import { DocUpload } from '../components/DocUpload';
 import { useAuth } from '../context/AuthProvider';
@@ -48,10 +49,20 @@ export function BotWorkspacePage() {
   }, [user, botId]);
 
   if (loading || profileLoading) {
-    return <main className="page-shell"><p className="muted">Loading bot…</p></main>;
+    return (
+      <AppShell active="workspace">
+        <p className="muted">Loading bot…</p>
+      </AppShell>
+    );
   }
   if (!user || !profile) return <Navigate to="/login" replace />;
-  if (busy) return <main className="page-shell"><p className="muted">Loading bot…</p></main>;
+  if (busy) {
+    return (
+      <AppShell active="workspace">
+        <p className="muted">Loading bot…</p>
+      </AppShell>
+    );
+  }
   if (!bot) return <Navigate to="/app" replace />;
 
   const plan = PLANS[profile.plan];
@@ -126,28 +137,16 @@ export function BotWorkspacePage() {
   };
 
   return (
-    <div className="app-layout">
-      <aside className="app-sidebar">
-        <Link to="/" className="brand">
-          KnowEmbed
-        </Link>
-        <nav className="app-nav">
-          <Link to="/app" className="app-nav-item">
-            ← All bots
-          </Link>
-        </nav>
-        <div className="sidebar-foot">
-          <p className="plan-badge">{plan.name}</p>
-          <p className="muted">{profile.email}</p>
+    <AppShell active="workspace">
+      <header className="page-heading inline">
+        <div>
+          <p className="eyebrow">
+            <Link to="/app" className="workspace-back">
+              ← All bots
+            </Link>
+          </p>
+          <h1>{bot.name}</h1>
         </div>
-      </aside>
-
-      <main className="app-main workspace">
-        <header className="page-heading inline">
-          <div>
-            <p className="eyebrow">Bot workspace</p>
-            <h1>{bot.name}</h1>
-          </div>
           <div className="toolbar">
             <button type="button" className="btn btn-secondary" onClick={() => void handlePublish()}>
               Publish bot
@@ -251,7 +250,6 @@ export function BotWorkspacePage() {
             />
           </section>
         </div>
-      </main>
-    </div>
+    </AppShell>
   );
 }

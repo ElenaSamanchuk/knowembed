@@ -1,17 +1,22 @@
 import { FormEvent, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { Link, Navigate, useNavigate } from 'react-router-dom';
 import { PageMeta } from '../components/PageMeta';
 import { SiteFooter } from '../components/SiteFooter';
 import { SiteHeader } from '../components/SiteHeader';
 import { supabase } from '../lib/supabase';
 
-export function LoginPage() {
+type LoginPageProps = {
+  mode: 'sign-in' | 'sign-up';
+};
+
+export function LoginPage({ mode }: LoginPageProps) {
   const navigate = useNavigate();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  const [mode, setMode] = useState<'sign-in' | 'sign-up'>('sign-up');
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
+
+  const isSignUp = mode === 'sign-up';
 
   const submit = async (event: FormEvent) => {
     event.preventDefault();
@@ -19,10 +24,9 @@ export function LoginPage() {
     setLoading(true);
 
     const normalized = email.trim().toLowerCase();
-    const response =
-      mode === 'sign-up'
-        ? await supabase.auth.signUp({ email: normalized, password })
-        : await supabase.auth.signInWithPassword({ email: normalized, password });
+    const response = isSignUp
+      ? await supabase.auth.signUp({ email: normalized, password })
+      : await supabase.auth.signInWithPassword({ email: normalized, password });
 
     setLoading(false);
 
@@ -32,8 +36,8 @@ export function LoginPage() {
     }
 
     if (!response.data.session) {
-      setError('Account created — check your email if confirmation is required, then sign in.');
-      setMode('sign-in');
+      setError('Account created — check your email if confirmation is required, then sign in');
+      navigate('/login', { replace: true });
       return;
     }
 
@@ -43,19 +47,24 @@ export function LoginPage() {
   return (
     <>
       <PageMeta
-        title="Sign in"
-        description="Create a free KnowEmbed account. Upload docs, test your AI chatbot, and embed it on any website."
-        path="/login"
+        title={isSignUp ? 'Create account' : 'Sign in'}
+        description={
+          isSignUp
+            ? 'Create a free KnowEmbed account. Upload docs, test your AI chatbot, and embed it on any website.'
+            : 'Sign in to your KnowEmbed workspace.'
+        }
+        path={isSignUp ? '/signup' : '/login'}
         noIndex
       />
       <SiteHeader />
       <main className="page-shell narrow">
         <header className="page-heading page-heading--spaced">
-          <p className="eyebrow">{mode === 'sign-up' ? 'Get started' : 'Welcome back'}</p>
-          <h1>Start building your embeddable bot</h1>
+          <p className="eyebrow">{isSignUp ? 'Get started' : 'Welcome back'}</p>
+          <h1>{isSignUp ? 'Create your embeddable bot' : 'Sign in to your workspace'}</h1>
           <p className="lead lead--spaced">
-            Free Starter plan — no card required. Your workspace includes a demo bot so you can chat
-            in under a minute.
+            {isSignUp
+              ? 'Free Starter plan — no card required. Your workspace includes a demo bot so you can chat in under a minute'
+              : 'Continue where you left off — bots, docs, and embed snippets are saved in your account'}
           </p>
         </header>
 
@@ -77,34 +86,50 @@ export function LoginPage() {
               type="password"
               required
               minLength={6}
-              autoComplete={mode === 'sign-up' ? 'new-password' : 'current-password'}
+              autoComplete={isSignUp ? 'new-password' : 'current-password'}
               value={password}
               onChange={(event) => setPassword(event.target.value)}
               placeholder="At least 6 characters"
             />
           </label>
-          {error ? <p className="form-error" role="alert">{error}</p> : null}
+          {error ? (
+            <p className="form-error" role="alert">
+              {error}
+            </p>
+          ) : null}
           <button type="submit" className="btn btn-primary" disabled={loading}>
-            {loading ? 'Please wait…' : mode === 'sign-up' ? 'Create account' : 'Sign in'}
+            {loading ? 'Please wait…' : isSignUp ? 'Create account' : 'Sign in'}
           </button>
         </form>
 
         <p className="muted center">
-          {mode === 'sign-up' ? 'Already have an account?' : 'New here?'}{' '}
-          <button
-            type="button"
-            className="link-button"
-            onClick={() => setMode(mode === 'sign-up' ? 'sign-in' : 'sign-up')}
-          >
-            {mode === 'sign-up' ? 'Sign in' : 'Create account'}
-          </button>
+          {isSignUp ? 'Already have an account?' : 'New here?'}{' '}
+          <Link to={isSignUp ? '/login' : '/signup'} className="link-button">
+            {isSignUp ? 'Sign in' : 'Create account'}
+          </Link>
         </p>
 
         <p className="muted center trust-note">
-          Secured by Supabase Auth. We only use your email to run your workspace.
+          Secured by Supabase Auth. We only use your email to run your workspace
         </p>
       </main>
       <SiteFooter />
     </>
   );
+}
+
+export function SignUpPage() {
+  return <LoginPage mode="sign-up" />;
+}
+
+export function SignInPage() {
+  return <LoginPage mode="sign-in" />;
+}
+
+/** Legacy query-param redirects */
+export function LoginRedirect() {
+  const params = new URLSearchParams(window.location.search);
+  const mode = params.get('mode');
+  if (mode === 'sign-in') return <Navigate to="/login" replace />;
+  return <Navigate to="/signup" replace />;
 }

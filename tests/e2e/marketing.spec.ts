@@ -14,7 +14,7 @@ test.describe('Marketing pages', () => {
   test('landing shows hero, features, and pricing CTA', async ({ page }) => {
     await page.goto('/');
     await expect(page.getByRole('heading', { level: 1 })).toContainText('embed');
-    await expect(page.getByText('Launch-ready MVP')).toBeVisible();
+    await expect(page.getByText('Docs → chatbot → embed')).toBeVisible();
     await expect(page.getByRole('link', { name: 'View pricing' })).toBeVisible();
     await expect(page.getByRole('link', { name: 'Create account' })).toBeVisible();
   });
@@ -26,11 +26,17 @@ test.describe('Marketing pages', () => {
     await expect(page.getByText('Stripe Checkout')).toBeVisible();
   });
 
-  test('login page renders sign-up form', async ({ page }) => {
-    await page.goto('/login');
+  test('signup page renders sign-up form', async ({ page }) => {
+    await page.goto('/signup');
     await expect(page.getByRole('heading', { level: 1 })).toContainText('embeddable bot');
     await expect(page.getByLabel('Work email')).toBeVisible();
     await expect(page.getByRole('button', { name: 'Create account' })).toBeVisible();
+  });
+
+  test('sign-in page renders login form', async ({ page }) => {
+    await page.goto('/login');
+    await expect(page.getByRole('heading', { level: 1 })).toContainText('workspace');
+    await expect(page.getByRole('button', { name: 'Sign in' })).toBeVisible();
   });
 
   test('app routes require auth', async ({ page }) => {

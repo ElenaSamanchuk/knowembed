@@ -39,7 +39,7 @@ export function SiteHeader() {
               <Link to="/login" className="btn btn-secondary nav-cta">
                 Sign in
               </Link>
-              <Link to="/login" className="btn btn-primary nav-cta">
+              <Link to="/signup" className="btn btn-primary nav-cta">
                 Start free
               </Link>
             </>

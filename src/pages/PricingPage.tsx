@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
+import { FaqAccordion } from '../components/FaqAccordion';
 import { PageMeta } from '../components/PageMeta';
 import { SiteFooter } from '../components/SiteFooter';
 import { SiteHeader } from '../components/SiteHeader';
@@ -11,15 +12,15 @@ import { PLANS } from '../lib/plans';
 const FAQ = [
   {
     q: 'What happens on Starter?',
-    a: 'You get one bot, three docs, and 50 answers per month — enough to validate the full embed flow.',
+    a: 'You get one bot, three docs, and 50 answers per month — enough to validate the full embed flow',
   },
   {
     q: 'Can I cancel Pro anytime?',
-    a: 'Yes. Billing runs through Stripe; downgrade when your subscription period ends.',
+    a: 'Yes. Billing runs through Stripe; downgrade when your subscription period ends',
   },
   {
     q: 'Are limits enforced?',
-    a: 'Yes — bots, documents, and monthly answers are checked server-side in Edge Functions.',
+    a: 'Yes — bots, documents, and monthly answers are checked server-side in Edge Functions',
   },
 ];
 
@@ -31,7 +32,7 @@ export function PricingPage() {
 
   const checkout = async (plan: 'starter' | 'pro') => {
     if (!user) {
-      navigate('/login');
+      navigate('/signup');
       return;
     }
     if (plan === 'starter') {
@@ -107,14 +108,7 @@ export function PricingPage() {
           <h2 id="pricing-faq" className="section-title">
             Pricing FAQ
           </h2>
-          <dl className="faq-list">
-            {FAQ.map((item) => (
-              <div key={item.q} className="faq-item panel-card">
-                <dt>{item.q}</dt>
-                <dd className="muted">{item.a}</dd>
-              </div>
-            ))}
-          </dl>
+          <FaqAccordion items={FAQ} />
         </section>
 
         <p className="muted center section-foot">

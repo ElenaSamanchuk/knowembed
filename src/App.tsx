@@ -5,7 +5,7 @@ import { CheckoutPage } from './pages/CheckoutPage';
 import { DashboardPage } from './pages/DashboardPage';
 import { DemoGuidePage } from './pages/DemoGuidePage';
 import { LandingPage } from './pages/LandingPage';
-import { LoginPage } from './pages/LoginPage';
+import { SignInPage, SignUpPage } from './pages/LoginPage';
 import { PricingPage } from './pages/PricingPage';
 
 export function App() {
@@ -14,7 +14,8 @@ export function App() {
       <Route path="/" element={<LandingPage />} />
       <Route path="/guide" element={<DemoGuidePage />} />
       <Route path="/pricing" element={<PricingPage />} />
-      <Route path="/login" element={<LoginPage />} />
+      <Route path="/signup" element={<SignUpPage />} />
+      <Route path="/login" element={<SignInPage />} />
       <Route path="/checkout" element={<CheckoutPage />} />
       <Route path="/app" element={<DashboardPage />} />
       <Route path="/app/analytics" element={<AnalyticsPage />} />

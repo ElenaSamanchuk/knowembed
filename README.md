@@ -4,7 +4,7 @@ MVP for [Paralect Product Academy](https://www.paralect.com/academy/product-mana
 
 **Live:** https://elenasamanchuk.github.io/knowembed/  
 **Embed demo:** https://elenasamanchuk.github.io/knowembed/embed-demo.html  
-**Written demo guide:** [docs/DEMO.md](./docs/DEMO.md) · [online](./public/docs/demo.html)
+**Written demo guide:** [docs/GUIDE.md](./docs/GUIDE.md) · [online /guide](https://elenasamanchuk.github.io/knowembed/guide)
 
 ## Features
 

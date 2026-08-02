@@ -56,7 +56,7 @@ export async function findRelevantChunks(
   serviceClient: SupabaseClient,
   botId: string,
   query: string,
-  limit = 5,
+  limit = 8,
 ): Promise<string[]> {
   const queryEmbedding = await createEmbedding(query);
   if (queryEmbedding) {
@@ -81,12 +81,23 @@ export async function findRelevantChunks(
   const terms = query
     .toLowerCase()
     .split(/[^\p{L}\p{N}]+/u)
-    .filter((term) => term.length > 2);
+    .filter((term) => term.length > 1);
+
+  const expandedTerms = [...terms];
+  for (const term of terms) {
+    if (term.endsWith('ing') && term.length > 5) expandedTerms.push(term.slice(0, -3));
+    if (term.endsWith('ies') && term.length > 4) expandedTerms.push(term.slice(0, -3) + 'y');
+    if (term.endsWith('s') && term.length > 3) expandedTerms.push(term.slice(0, -1));
+  }
 
   const scored = chunks
     .map((chunk) => {
       const haystack = chunk.content.toLowerCase();
-      const score = terms.reduce((total, term) => total + (haystack.includes(term) ? 1 : 0), 0);
+      const score = expandedTerms.reduce((total, term) => {
+        if (haystack.includes(term)) return total + 2;
+        if (term.length > 4 && haystack.includes(term.slice(0, 4))) return total + 1;
+        return total;
+      }, 0);
       return { content: chunk.content, score };
     })
     .filter((item) => item.score > 0)
@@ -112,7 +123,7 @@ async function answerWithGroq(
     },
     body: JSON.stringify({
       model: Deno.env.get('GROQ_MODEL')?.trim() || GROQ_MODEL,
-      temperature: 0.2,
+      temperature: 0.35,
       messages: [
         { role: 'system', content: systemPrompt },
         { role: 'user', content: userPrompt },
@@ -161,7 +172,7 @@ async function answerWithGemini(
             },
           ],
           generationConfig: {
-            temperature: 0.2,
+            temperature: 0.35,
           },
         }),
       },
@@ -196,7 +207,7 @@ async function answerWithOpenAI(
     },
     body: JSON.stringify({
       model: OPENAI_CHAT_MODEL,
-      temperature: 0.2,
+      temperature: 0.35,
       messages: [
         { role: 'system', content: systemPrompt },
         { role: 'user', content: userPrompt },
@@ -228,10 +239,13 @@ export async function answerWithContext(
 
   const context = contextBlocks.join('\n\n---\n\n');
   const systemPrompt =
-    `You are ${botName}'s support assistant. Answer ONLY using the provided context. ` +
-    'If the answer is not in the context, say you do not know and suggest contacting support. ' +
-    'Keep answers concise, friendly, and accurate.';
-  const userPrompt = `Context:\n${context}\n\nQuestion: ${question}`;
+    `You are ${botName}'s knowledgeable AI support assistant. Answer using ONLY the provided context.\n` +
+    '- Be conversational, helpful, and precise — like a smart support agent who read the docs\n' +
+    '- For multi-part questions, address each part in order\n' +
+    '- If the exact answer is not in context, say what related info you do have and suggest contacting support\n' +
+    '- Never invent prices, dates, policies, or product details not stated in the context\n' +
+    '- Keep answers concise (2–5 sentences) unless the user asks for detail';
+  const userPrompt = `Context from knowledge base:\n${context}\n\nCustomer question: ${question}\n\nAnswer:`;
 
   if (groqKey) {
     return answerWithGroq(groqKey, systemPrompt, userPrompt);

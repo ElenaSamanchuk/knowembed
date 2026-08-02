@@ -66,7 +66,8 @@
 
       .site-header__bar {
         pointer-events: auto;
-        max-width: 720px;
+        width: var(--wrap);
+        max-width: var(--wrap);
         margin-inline: auto;
         display: flex;
         align-items: center;
@@ -634,7 +635,7 @@
           </p>
         </div>
         <div class="hero-frame">
-          <img src="./store-demo/img/2.jpg" alt="Still collection preview" width="800" height="600" />
+          <img src="./store-demo/img/product-3.png" alt="Still collection preview" width="800" height="600" />
         </div>
       </section>
 
@@ -719,14 +720,14 @@
 
     <script>
       const PRODUCTS = [
-        { id: 1, title: 'Essential cotton tee', category: "men's clothing", price: 29.99, image: './store-demo/img/f1.png' },
-        { id: 2, title: 'Relaxed fit hoodie', category: "men's clothing", price: 54.99, image: './store-demo/img/f2.png' },
-        { id: 3, title: 'Lightweight jacket', category: "men's clothing", price: 89.99, image: './store-demo/img/f3.png' },
-        { id: 4, title: 'Everyday chinos', category: "men's clothing", price: 49.99, image: './store-demo/img/f4.png' },
-        { id: 5, title: 'Classic sneakers', category: "men's clothing", price: 79.99, image: './store-demo/img/f5.png' },
-        { id: 6, title: 'Linen blend shirt', category: "women's clothing", price: 44.99, image: './store-demo/img/3.png' },
-        { id: 7, title: 'Soft knit sweater', category: "women's clothing", price: 64.99, image: './store-demo/img/f2.png' },
-        { id: 8, title: 'Weekend tote bag', category: 'accessories', price: 39.99, image: './store-demo/img/f1.png' },
+        { id: 1, title: 'Fjallraven backpack', category: "men's clothing", price: 109.95, image: './store-demo/img/product-1.png' },
+        { id: 2, title: 'Premium slim fit tee', category: "men's clothing", price: 22.3, image: './store-demo/img/product-2.png' },
+        { id: 3, title: 'Cotton jacket', category: "men's clothing", price: 55.99, image: './store-demo/img/product-3.png' },
+        { id: 4, title: 'Casual slim fit', category: "men's clothing", price: 15.99, image: './store-demo/img/product-4.png' },
+        { id: 15, title: '3-in-1 snowboard jacket', category: "women's clothing", price: 56.99, image: './store-demo/img/product-15.png' },
+        { id: 16, title: 'Faux leather moto jacket', category: "women's clothing", price: 29.95, image: './store-demo/img/product-16.png' },
+        { id: 17, title: 'Rain windbreaker', category: "women's clothing", price: 39.99, image: './store-demo/img/product-17.png' },
+        { id: 18, title: 'Boat neck top', category: "women's clothing", price: 9.85, image: './store-demo/img/product-18.png' },
       ];
 
       const state = { category: 'all', query: '', sort: 'default' };

@@ -6,13 +6,16 @@
     <title>KnowEmbed — кейс · Elena Samanchuk</title>
     <meta
       name="description"
-      content="KnowEmbed — embeddable AI chatbot builder: Supabase, Groq RAG, Stripe, Shadow DOM widget. Full-stack MVP case study by Elena Samanchuk."
+      content="KnowEmbed — embeddable AI chatbot builder: Supabase, Groq RAG, Stripe, Shadow DOM widget. Full-stack MVP by Elena Samanchuk."
     />
     <meta property="og:title" content="KnowEmbed — portfolio case" />
     <meta property="og:type" content="article" />
     <link rel="icon" href="./favicon.svg" type="image/svg+xml" />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
-    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;600;700&display=swap" rel="stylesheet" />
+    <link
+      href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500&family=Manrope:wght@400;600;700&display=swap"
+      rel="stylesheet"
+    />
     <link rel="stylesheet" href="./case.css" />
   </head>
   <body>
@@ -23,6 +26,7 @@
           <a href="./">Демо</a>
           <a href="./guide">Guide</a>
           <a href="./embed-demo.html">Embed</a>
+          <a href="https://github.com/ElenaSamanchuk/knowembed/blob/main/docs/GUIDE.md" target="_blank" rel="noopener noreferrer">MD guide</a>
           <a href="https://github.com/ElenaSamanchuk/knowembed" target="_blank" rel="noopener noreferrer">GitHub</a>
         </nav>
       </div>
@@ -30,11 +34,11 @@
 
     <main>
       <section class="hero wrap">
-        <p class="eyebrow">Кейс · full-stack MVP</p>
+        <p class="eyebrow">Docs → chatbot → embed</p>
         <h1>KnowEmbed</h1>
         <p class="hero-lead">
           B2B SaaS: загрузка документов → AI-чат в приложении → embed-виджет на сайт → тарифы Starter / Pro через Stripe.
-          Тестовое задание Paralect (Embeddable Chatbot Builder): реальная БД, Edge Functions, Groq LLM, не mock UI.
+          Full-stack MVP с реальной БД, Edge Functions и Groq LLM
         </p>
         <div class="tag-row">
           <span class="tag">Supabase</span>
@@ -46,7 +50,8 @@
         </div>
         <div class="cta-row">
           <a class="btn btn-primary" href="./">Открыть приложение</a>
-          <a class="btn btn-secondary" href="./embed-demo.html">Embed demo (Still store)</a>
+          <a class="btn btn-secondary" href="./guide">Demo guide</a>
+          <a class="btn btn-secondary" href="./embed-demo.html">Embed demo</a>
           <a class="btn btn-secondary" href="https://github.com/ElenaSamanchuk/knowembed" target="_blank" rel="noopener noreferrer">Репозиторий</a>
         </div>
       </section>
@@ -58,14 +63,14 @@
             <h3>Контекст</h3>
             <p>
               Продуктовый MVP: маркетинг, auth, workspace бота, загрузка FAQ, in-app чат с RAG, публикация публичного bot id,
-              embed на демо-магазин, billing Pro через Stripe webhook.
+              embed на демо-магазин, billing Pro через Stripe webhook
             </p>
           </article>
           <article class="card">
             <h3>Роль</h3>
             <p>
               UX/UI лендинга и приложения, архитектура Supabase, Edge Functions, виджет, CI, demo guide со скринами,
-              v2: PDF, analytics, vector search.
+              v2: PDF, analytics, vector search
             </p>
           </article>
         </div>
@@ -73,13 +78,13 @@
 
       <section class="wrap section">
         <h2 class="section-title">Демо-поток</h2>
-        <p class="section-lead">7 шагов — как в written walkthrough на /guide.</p>
+        <p class="section-lead">7 шагов — как в written walkthrough на /guide и в docs/GUIDE.md</p>
         <ol class="pipeline">
           <li class="pipeline-step">
             <div class="step-num">01</div>
             <div>
               <h3>Landing & pricing</h3>
-              <p>Hero, MVP badge, тарифы Starter / Pro.</p>
+              <p>Hero, тарифы Starter / Pro, FAQ accordion</p>
               <img src="./docs/screenshots/01-landing.png" alt="Landing page" loading="lazy" />
             </div>
           </li>
@@ -87,7 +92,7 @@
             <div class="step-num">02</div>
             <div>
               <h3>Sign up</h3>
-              <p>Supabase Auth, профиль и demo bot Store Assistant.</p>
+              <p>Supabase Auth, профиль и demo bot Store Assistant</p>
               <img src="./docs/screenshots/02-signup.png" alt="Sign up" loading="lazy" />
             </div>
           </li>
@@ -95,7 +100,7 @@
             <div class="step-num">03</div>
             <div>
               <h3>Knowledge index</h3>
-              <p>FAQ → chunks в Postgres, re-index demo.</p>
+              <p>FAQ → chunks в Postgres, re-index demo</p>
               <img src="./docs/screenshots/03-knowledge.png" alt="Knowledge docs" loading="lazy" />
             </div>
           </li>
@@ -103,7 +108,7 @@
             <div class="step-num">04</div>
             <div>
               <h3>In-app chat</h3>
-              <p>RAG + Groq: shipping, returns из FAQ.</p>
+              <p>RAG + Groq: shipping, returns из FAQ</p>
               <img src="./docs/screenshots/04-chat.png" alt="Chat" loading="lazy" />
             </div>
           </li>
@@ -111,7 +116,7 @@
             <div class="step-num">05</div>
             <div>
               <h3>Publish</h3>
-              <p>Public id, embed snippet, Publish bot.</p>
+              <p>Public id, embed snippet, Publish bot</p>
               <img src="./docs/screenshots/05-publish.png" alt="Publish" loading="lazy" />
             </div>
           </li>
@@ -119,7 +124,7 @@
             <div class="step-num">06</div>
             <div>
               <h3>Embed widget</h3>
-              <p>Still store (still-store layout) + launcher bottom-right.</p>
+              <p>Still store + launcher bottom-right, light widget UI</p>
               <img src="./docs/screenshots/06-embed.png" alt="Embed demo" loading="lazy" />
             </div>
           </li>
@@ -127,7 +132,7 @@
             <div class="step-num">07</div>
             <div>
               <h3>Stripe Pro</h3>
-              <p>Checkout test mode → webhook → plan pro.</p>
+              <p>Checkout test mode → webhook → plan pro</p>
               <img src="./docs/screenshots/07-stripe.png" alt="Pricing Stripe" loading="lazy" />
             </div>
           </li>
@@ -136,7 +141,7 @@
     </main>
 
     <footer class="site-footer">
-      <div class="wrap">© Elena Samanchuk · KnowEmbed · Paralect test MVP</div>
+      <div class="wrap">© Elena Samanchuk · KnowEmbed · full-stack MVP</div>
     </footer>
   </body>
 </html>

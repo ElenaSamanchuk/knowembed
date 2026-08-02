@@ -22,7 +22,7 @@ export function SiteFooter() {
           </div>
           <div>
             <p className="footer-label">Get started</p>
-            <Link to="/login">Sign up free</Link>
+            <Link to="/signup">Sign up free</Link>
             <Link to="/login">Sign in</Link>
             <a
               href="https://github.com/ElenaSamanchuk/knowembed"
