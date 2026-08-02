@@ -16,7 +16,7 @@ test.describe('Marketing pages', () => {
     await expect(page.getByRole('heading', { level: 1 })).toContainText('embed');
     await expect(page.getByText('Docs → chatbot → embed')).toBeVisible();
     await expect(page.getByRole('link', { name: 'View pricing' })).toBeVisible();
-    await expect(page.getByRole('link', { name: 'Create account' })).toBeVisible();
+    await expect(page.getByRole('link', { name: 'Ship your first bot' }).first()).toBeVisible();
   });
 
   test('pricing shows starter and pro plans', async ({ page }) => {

@@ -1,6 +1,9 @@
 import { Link } from 'react-router-dom';
 import { AppPromoBlock } from '../components/AppPromoBlock';
 import { FaqAccordion } from '../components/FaqAccordion';
+import { HeroDemoPanel } from '../components/HeroDemoPanel';
+import { HeroMetricsStrip } from '../components/HeroMetricsStrip';
+import { HeroSocialProof } from '../components/HeroSocialProof';
 import { PageMeta } from '../components/PageMeta';
 import { Reveal } from '../components/Reveal';
 import { SiteFooter } from '../components/SiteFooter';
@@ -12,6 +15,7 @@ const STEPS = [
   { n: '01', title: 'Upload your docs', text: 'FAQ, policies, PDFs — indexed for AI search' },
   { n: '02', title: 'Test answers', text: 'ChatGPT-style workspace powered by your content' },
   { n: '03', title: 'Embed in one line', text: 'Shadow DOM widget — no layout conflicts' },
+  { n: '04', title: 'Live on your site', text: 'Publish once — widget answers 24/7' },
 ];
 
 const FEATURES = [
@@ -42,9 +46,21 @@ const FEATURES = [
 ];
 
 const USE_CASES = [
-  { title: 'E-commerce', text: 'Shipping, returns, sizing — answered before checkout support' },
-  { title: 'SaaS help', text: 'Onboarding and billing FAQs without opening a ticket' },
-  { title: 'Agencies', text: 'Ship a branded bot for each client from one workspace' },
+  {
+    title: 'E-commerce',
+    text: 'Shipping, returns, sizing — answered before checkout support',
+    kpi: 'Typical outcome: fewer repeat tickets on order questions',
+  },
+  {
+    title: 'SaaS support',
+    text: 'Onboarding and billing FAQs without opening a ticket',
+    kpi: '24/7 FAQ coverage without extra headcount',
+  },
+  {
+    title: 'Agencies',
+    text: 'Ship a branded bot for each client from one workspace',
+    kpi: 'One workspace · multiple client embeds',
+  },
 ];
 
 const FAQ = [
@@ -66,6 +82,8 @@ const FAQ = [
   },
 ];
 
+const WIDGET_SNIPPET = `<script src="${publicPath('widget.js')}" data-bot-id="demo-store-assistant"></script>`;
+
 export function LandingPage() {
   return (
     <>
@@ -84,13 +102,17 @@ export function LandingPage() {
             <div className="hero-copy">
               <p className="mvp-badge">Docs → chatbot → embed</p>
               <h1>
-                Turn your docs into an AI bot{' '}
+                Turn your docs into
+                <br />
+                an AI bot
+                <br />
                 <span className="gradient-text">your customers can embed</span>
               </h1>
               <p className="lead lead--spaced">
                 Answer FAQs 24/7 from your own knowledge base. Upload content, preview answers in-app,
                 then drop a lightweight widget on any website — one script tag
               </p>
+              <HeroSocialProof />
               <div className="stack-badges" aria-label="Tech stack">
                 <span>Supabase</span>
                 <span>Groq AI</span>
@@ -99,34 +121,45 @@ export function LandingPage() {
               </div>
               <div className="hero-actions">
                 <Link to="/signup" className="btn btn-primary btn-lg">
-                  Start free
+                  Ship your first bot
                 </Link>
+                <a href={publicPath('embed-demo.html')} className="btn btn-secondary btn-lg">
+                  See live embed
+                </a>
                 <Link to="/pricing" className="btn btn-ghost btn-lg">
                   View pricing
                 </Link>
-                <a href={publicPath('embed-demo.html')} className="btn btn-ghost btn-lg">
-                  See live demo
-                </a>
               </div>
             </div>
-            <div className="hero-panel panel-card">
-              <p className="eyebrow">How it works</p>
-              <ol className="pipeline-list">
-                {STEPS.map((step) => (
-                  <li key={step.n}>
-                    <span className="pipeline-num">{step.n}</span>
-                    <div>
-                      <strong>{step.title}</strong>
-                      <p className="muted">{step.text}</p>
-                    </div>
-                  </li>
-                ))}
-              </ol>
+            <HeroDemoPanel />
+          </section>
+
+          <HeroMetricsStrip />
+
+          <section className="hero-pipeline" aria-label="How it works">
+            <p className="eyebrow">How it works</p>
+            <ol className="pipeline-list pipeline-list--inline">
+              {STEPS.map((step) => (
+                <li key={step.n}>
+                  <span className="pipeline-num">{step.n}</span>
+                  <div>
+                    <strong>{step.title}</strong>
+                    <p className="muted">{step.text}</p>
+                  </div>
+                </li>
+              ))}
+            </ol>
+            <div className="hero-terminal panel-card">
+              <p className="eyebrow">Embed snippet</p>
+              <pre className="hero-terminal__code">
+                <code>{WIDGET_SNIPPET}</code>
+              </pre>
+              <p className="hero-terminal__status">
+                <span aria-hidden="true">→</span> Widget live on your site
+              </p>
             </div>
           </section>
         </Reveal>
-
-        <AppPromoBlock />
 
         <Reveal delay={80}>
           <section className="use-cases" aria-labelledby="use-cases-heading">
@@ -135,14 +168,17 @@ export function LandingPage() {
             </h2>
             <div className="use-case-grid">
               {USE_CASES.map((item) => (
-                <article key={item.title} className="use-case-card">
+                <article key={item.title} className="use-case-card use-case-card--kpi">
                   <h3>{item.title}</h3>
                   <p className="muted">{item.text}</p>
+                  <p className="use-case-kpi">{item.kpi}</p>
                 </article>
               ))}
             </div>
           </section>
         </Reveal>
+
+        <AppPromoBlock />
 
         <Reveal delay={120}>
           <section className="feature-grid feature-grid--six" aria-labelledby="features-heading">
@@ -186,7 +222,7 @@ export function LandingPage() {
                     to={plan.id === 'pro' ? '/pricing' : '/signup'}
                     className="btn btn-primary btn-block"
                   >
-                    {plan.id === 'pro' ? 'See Pro details' : 'Get started free'}
+                    {plan.id === 'pro' ? 'See Pro details' : 'Ship your first bot'}
                   </Link>
                 </article>
               ))}
@@ -204,15 +240,16 @@ export function LandingPage() {
         </Reveal>
 
         <Reveal delay={240}>
-          <section className="cta-band">
-          <h2>See how it works — step by step</h2>
-          <p>User guide with screenshots: sign up, upload docs, test chat, embed, and upgrade</p>
-          <div className="hero-actions cta-band-actions">
-            <Link to="/guide" className="btn btn-ghost btn-lg cta-ghost">
-              Read user guide
-            </Link>
-              <Link to="/signup" className="btn btn-primary btn-lg cta-primary">
-                Create account
+          <section className="cta-band cta-band--dark">
+            <div className="cta-band__grain" aria-hidden="true" />
+            <h2>Launch your bot in one afternoon</h2>
+            <p>User guide with screenshots — sign up, upload docs, test chat, embed, and upgrade</p>
+            <div className="hero-actions cta-band-actions">
+              <Link to="/guide" className="btn btn-primary btn-lg cta-primary-dark">
+                Read user guide
+              </Link>
+              <Link to="/signup" className="btn btn-ghost btn-lg cta-ghost-dark">
+                Ship your first bot
               </Link>
             </div>
           </section>

@@ -58,11 +58,26 @@ const html = `<!doctype html>
       height: 64px;
     }
     .screen {
+      position: relative;
       overflow: hidden;
       border-radius: 34px;
       background: #000;
       box-shadow: 0 0 0 1px rgb(0 0 0 / 0.65) inset;
       aspect-ratio: 390 / 844;
+    }
+    .island {
+      position: absolute;
+      top: 11px;
+      left: 50%;
+      z-index: 3;
+      width: 92px;
+      height: 26px;
+      transform: translateX(-50%);
+      border-radius: 999px;
+      background: #0a0a0a;
+      box-shadow:
+        0 0 0 1px rgb(255 255 255 / 0.06) inset,
+        0 1px 3px rgb(0 0 0 / 0.45);
     }
     .screen img {
       display: block;
@@ -70,6 +85,7 @@ const html = `<!doctype html>
       height: 100%;
       object-fit: cover;
       object-position: top center;
+      border-radius: 34px;
     }
     .bar {
       width: 108px;
@@ -96,6 +112,7 @@ const html = `<!doctype html>
 <body>
   <div class="device">
     <div class="screen">
+      <div class="island" aria-hidden="true"></div>
       <img src="data:image/png;base64,${screenB64}" alt="" />
     </div>
     <div class="bar" aria-hidden="true"></div>

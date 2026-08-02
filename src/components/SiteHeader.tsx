@@ -40,7 +40,7 @@ export function SiteHeader() {
                 Sign in
               </Link>
               <Link to="/signup" className="btn btn-primary nav-cta">
-                Start free
+                Ship your first bot
               </Link>
             </>
           )}

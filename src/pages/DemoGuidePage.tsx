@@ -72,12 +72,12 @@ export function DemoGuidePage() {
           <p className="eyebrow">User guide</p>
           <h1>How to use KnowEmbed</h1>
           <p className="lead lead--spaced">
-            Step-by-step instructions from first sign-up to a live embed on your site — with screenshots
-            at each stage
+            Launch in one afternoon — step-by-step from first sign-up to a live embed on your site,
+            with screenshots at each stage
           </p>
           <div className="hero-actions">
             <Link to="/signup" className="btn btn-primary">
-              Create account
+              Ship your first bot
             </Link>
             <Link to="/app" className="btn btn-ghost">
               Open dashboard
