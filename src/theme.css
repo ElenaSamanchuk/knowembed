@@ -1786,12 +1786,7 @@ html {
   position: relative;
   min-height: 0;
   overflow: hidden;
-  background: linear-gradient(
-    180deg,
-    rgb(80 137 253 / 0.16) 0%,
-    rgb(80 137 253 / 0.06) 55%,
-    rgb(80 137 253 / 0.02) 100%
-  );
+  background: transparent;
 }
 
 .app-promo-phone {
