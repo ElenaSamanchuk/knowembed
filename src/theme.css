@@ -29,7 +29,7 @@
   --d-accent: #01b6ca;
   --d-accent-soft: #0b2631;
 
-  --content: min(1080px, calc(100% - 48px));
+  --content: min(1280px, calc(100% - 24px));
   --container: var(--content);
   --ease: cubic-bezier(0.16, 1, 0.3, 1);
 }
@@ -55,14 +55,14 @@ body {
   position: fixed;
   inset: 0 0 auto;
   z-index: 100;
-  padding: 10px 16px 0;
+  padding: 10px 12px 0;
   pointer-events: none;
 }
 
 .site-header-bar {
   pointer-events: auto;
-  width: var(--container);
-  max-width: var(--container);
+  width: 100%;
+  max-width: var(--content);
   margin: 0 auto;
   display: flex;
   align-items: center;
@@ -861,6 +861,7 @@ html {
 .site-footer-inner {
   max-width: var(--content);
   margin: 0 auto 24px;
+  padding-inline: 16px;
   display: grid;
   grid-template-columns: 1.2fr 1fr;
   gap: 32px;
@@ -923,6 +924,7 @@ html {
   grid-template-columns: minmax(0, 1fr) minmax(260px, 340px);
   gap: 48px;
   align-items: center;
+  width: 100%;
   max-width: var(--content);
   margin: 0 auto 72px;
   padding: 40px 36px;

@@ -341,7 +341,7 @@ a.btn,
 .landing {
   max-width: var(--content);
   margin: 0 auto;
-  padding: 88px 24px 80px;
+  padding: 88px 16px 80px;
 }
 
 .hero-block {
@@ -434,7 +434,7 @@ a.btn,
 .page-shell {
   max-width: var(--content);
   margin: 0 auto;
-  padding: 88px 24px 80px;
+  padding: 88px 16px 80px;
 }
 
 .page-shell.narrow {
