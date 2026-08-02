@@ -9,7 +9,7 @@ type PageMetaProps = {
 };
 
 const SITE_NAME = 'KnowEmbed';
-const DEFAULT_OG_IMAGE = '/docs/screenshots/01-landing.png';
+const DEFAULT_OG_IMAGE = '/og-image.png';
 
 function upsertMeta(selector: string, attrs: Record<string, string>) {
   let el = document.head.querySelector<HTMLMetaElement>(selector);
