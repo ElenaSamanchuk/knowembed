@@ -1,4 +1,5 @@
 import { Navigate, Route, Routes } from 'react-router-dom';
+import { AnalyticsPage } from './pages/AnalyticsPage';
 import { BotWorkspacePage } from './pages/BotWorkspacePage';
 import { CheckoutPage } from './pages/CheckoutPage';
 import { DashboardPage } from './pages/DashboardPage';
@@ -16,6 +17,7 @@ export function App() {
       <Route path="/login" element={<LoginPage />} />
       <Route path="/checkout" element={<CheckoutPage />} />
       <Route path="/app" element={<DashboardPage />} />
+      <Route path="/app/analytics" element={<AnalyticsPage />} />
       <Route path="/app/bots/:botId" element={<BotWorkspacePage />} />
       <Route path="*" element={<Navigate to="/" replace />} />
     </Routes>

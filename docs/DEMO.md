@@ -19,7 +19,7 @@ KnowEmbed is an MVP SaaS product:
 3. **Knowledge upload** — `.txt` / `.md` / `.csv` → chunks in Postgres  
 4. **In-app chat** — RAG: retrieve doc chunks from DB → Groq LLM answer  
 5. **Publish + embed** — one `<script>` widget for any website  
-6. **Billing** — mock Stripe checkout; plan limits enforced server-side  
+6. **Billing** — Stripe Checkout (test mode) + webhook; plan limits enforced server-side  
 
 ### Stack
 
@@ -47,7 +47,7 @@ KnowEmbed is an MVP SaaS product:
 
 1. Open `/`  
 2. Confirm hero, three feature cards, pricing preview, CTA **Start free**  
-3. Open **Pricing** — Starter vs Pro, mock Stripe note  
+3. Open **Pricing** — Starter vs Pro, Stripe test card note  
 
 **Expected:** Clear value prop; no broken links.
 
@@ -93,7 +93,7 @@ KnowEmbed is an MVP SaaS product:
 
 **Expected:** Widget matches in-app answers; **Powered by KnowEmbed** badge on Starter.
 
-### Step 7 — Pricing & mock checkout
+### Step 7 — Pricing & Stripe checkout
 
 1. Go to **Pricing** → **Upgrade with Stripe test**  
 2. Mock checkout page shows test card `4242…`  
@@ -135,7 +135,7 @@ TEST_USER_EMAIL=you@example.com TEST_USER_PASSWORD=secret npm run test:e2e
 
 - **Groq free tier** — real LLM without paid OpenAI/Gemini quota issues for demo  
 - **Keyword retrieval** — pragmatic RAG for small FAQ docs; pgvector schema ready for v2  
-- **Mock Stripe** — assignment allows mock billing; checkout UX included  
+- **Stripe test mode** — real Checkout session + webhook updates `profiles.plan`  
 - **Shadow DOM widget** — no CSS conflicts on host sites (pattern similar to production chat widgets)  
 
 ---

@@ -1,4 +1,5 @@
 import { Link } from 'react-router-dom';
+import { publicPath } from '../lib/paths';
 import { SiteHeader } from '../components/SiteHeader';
 
 type GuideStep = {
@@ -53,13 +54,10 @@ const STEPS: GuideStep[] = [
   },
 ];
 
-function Shot({ alt }: { alt: string }) {
+function Shot({ alt, src }: { alt: string; src: string }) {
   return (
     <figure className="guide-shot">
-      <div className="guide-shot-placeholder" aria-label={alt}>
-        Screenshot: {alt}
-        <span className="muted">Add PNG to public/docs/screenshots/</span>
-      </div>
+      <img className="guide-shot-img" src={src} alt={alt} loading="lazy" />
     </figure>
   );
 }
@@ -73,16 +71,18 @@ export function DemoGuidePage() {
           <p className="eyebrow">Paralect deliverable</p>
           <h1>Demo guide</h1>
           <p className="lead lead--spaced">
-            Written walkthrough with expected results. Replace placeholder screenshots in{' '}
-            <code>public/docs/screenshots/</code> for portfolio-quality presentation.
+            Written walkthrough with expected results and screenshots from the live demo flow.
           </p>
           <div className="hero-actions">
             <Link to="/login" className="btn btn-primary">
               Start demo
             </Link>
-            <Link to="/embed-demo.html" className="btn btn-ghost">
+            <a href={publicPath('embed-demo.html')} className="btn btn-ghost">
               Open embed demo
-            </Link>
+            </a>
+            <a href={publicPath('case.html')} className="btn btn-ghost">
+              Portfolio case
+            </a>
           </div>
         </header>
 
@@ -102,7 +102,7 @@ export function DemoGuidePage() {
               <p className="guide-expected">
                 <strong>Expected:</strong> {step.expected}
               </p>
-              <Shot alt={step.title} />
+              <Shot alt={step.title} src={step.shot} />
             </li>
           ))}
         </ol>
@@ -111,10 +111,7 @@ export function DemoGuidePage() {
           <h2>Portfolio angle</h2>
           <p>
             Position as <strong>full-stack MVP</strong>: backend (Supabase + Edge Functions), AI integration (RAG + Groq),
-            payments (Stripe webhooks), embeddable widget — similar depth to Yandex Pet Day case (design + implementation).
-          </p>
-          <p className="muted">
-            NN99/Sender reference: production landing polish; KnowEmbed adds DB + AI + billing on top of widget pattern.
+            payments (Stripe webhooks), embeddable widget, PDF ingest, pgvector search, and analytics.
           </p>
         </section>
       </main>

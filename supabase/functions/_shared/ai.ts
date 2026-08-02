@@ -1,4 +1,5 @@
 import type { SupabaseClient } from 'jsr:@supabase/supabase-js@2';
+import { createEmbedding } from './embeddings.ts';
 
 const GROQ_MODEL = 'llama-3.3-70b-versatile';
 const GEMINI_MODELS = ['gemini-1.5-flash', 'gemini-1.5-flash-8b'] as const;
@@ -57,6 +58,18 @@ export async function findRelevantChunks(
   query: string,
   limit = 5,
 ): Promise<string[]> {
+  const queryEmbedding = await createEmbedding(query);
+  if (queryEmbedding) {
+    const { data: matches, error } = await serviceClient.rpc('match_chunks', {
+      p_bot_id: botId,
+      p_query_embedding: queryEmbedding,
+      p_match_count: limit,
+    });
+    if (!error && matches?.length) {
+      return matches.map((row: { content: string }) => row.content);
+    }
+  }
+
   const { data: chunks, error } = await serviceClient
     .from('chunks')
     .select('content')

@@ -1,9 +1,14 @@
 import { useRef, useState } from 'react';
+import { extractPdfText } from '../lib/pdfText';
 
 type DocUploadProps = {
   disabled?: boolean;
   onUpload: (fileName: string, text: string) => void;
 };
+
+const TEXT_EXTENSIONS = ['.txt', '.md', '.csv'];
+const MAX_TEXT_BYTES = 200_000;
+const MAX_PDF_BYTES = 2_000_000;
 
 export function DocUpload({ disabled, onUpload }: DocUploadProps) {
   const inputRef = useRef<HTMLInputElement>(null);
@@ -11,22 +16,35 @@ export function DocUpload({ disabled, onUpload }: DocUploadProps) {
 
   const handleFile = async (file: File) => {
     setError('');
-    const allowed = ['.txt', '.md', '.csv'];
     const lower = file.name.toLowerCase();
-    if (!allowed.some((ext) => lower.endsWith(ext))) {
-      setError('Upload .txt, .md, or .csv files for this MVP.');
+    const isPdf = lower.endsWith('.pdf');
+    const isText = TEXT_EXTENSIONS.some((ext) => lower.endsWith(ext));
+
+    if (!isPdf && !isText) {
+      setError('Upload .txt, .md, .csv, or .pdf files.');
       return;
     }
-    if (file.size > 200_000) {
-      setError('Max file size is 200 KB in the demo MVP.');
+
+    if (isPdf && file.size > MAX_PDF_BYTES) {
+      setError('Max PDF size is 2 MB.');
       return;
     }
-    const text = await file.text();
-    if (!text.trim()) {
-      setError('File is empty.');
+
+    if (!isPdf && file.size > MAX_TEXT_BYTES) {
+      setError('Max text file size is 200 KB.');
       return;
     }
-    onUpload(file.name, text);
+
+    try {
+      const text = isPdf ? await extractPdfText(file) : await file.text();
+      if (!text.trim()) {
+        setError('No readable text found in this file.');
+        return;
+      }
+      onUpload(file.name, text);
+    } catch {
+      setError('Could not read this file. Try another export or a .txt/.md upload.');
+    }
   };
 
   return (
@@ -34,7 +52,7 @@ export function DocUpload({ disabled, onUpload }: DocUploadProps) {
       <input
         ref={inputRef}
         type="file"
-        accept=".txt,.md,.csv,text/plain,text/markdown"
+        accept=".txt,.md,.csv,.pdf,text/plain,text/markdown,application/pdf"
         hidden
         onChange={(event) => {
           const file = event.target.files?.[0];
@@ -50,7 +68,7 @@ export function DocUpload({ disabled, onUpload }: DocUploadProps) {
       >
         Upload knowledge doc
       </button>
-      <p className="muted">FAQ, pricing sheet, onboarding notes (.txt / .md).</p>
+      <p className="muted">FAQ, policies, onboarding notes (.txt / .md / .pdf).</p>
       {error ? <p className="form-error">{error}</p> : null}
     </div>
   );

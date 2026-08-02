@@ -13,6 +13,7 @@ import {
   type StoredDocument,
   updateBot,
 } from '../lib/data';
+import { appOrigin, publicPath } from '../lib/paths';
 import { SAMPLE_FAQ } from '../data/sampleKnowledge';
 import { PLANS } from '../lib/plans';
 
@@ -25,7 +26,7 @@ export function BotWorkspacePage() {
   const [busy, setBusy] = useState(true);
   const [uploading, setUploading] = useState(false);
 
-  const origin = typeof window !== 'undefined' ? window.location.origin : '';
+  const origin = typeof window !== 'undefined' ? appOrigin() : '';
 
   const reload = async () => {
     if (!user) return;
@@ -213,7 +214,7 @@ export function BotWorkspacePage() {
             <pre className="code-block">{embedSnippet}</pre>
             <p className="muted">
               Widget calls Supabase Edge Functions for AI answers. Try{' '}
-              <a href="/embed-demo.html" target="_blank" rel="noreferrer">
+              <a href={publicPath('embed-demo.html')} target="_blank" rel="noreferrer">
                 embed demo
               </a>
               .

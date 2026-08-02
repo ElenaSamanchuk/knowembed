@@ -3,6 +3,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import { SiteHeader } from '../components/SiteHeader';
 import { useAuth } from '../context/AuthProvider';
 import { createCheckoutSession } from '../lib/api';
+import { appOrigin } from '../lib/paths';
 import { PLANS } from '../lib/plans';
 
 export function PricingPage() {
@@ -24,7 +25,7 @@ export function PricingPage() {
     setError('');
     setBusy(true);
     try {
-      const url = await createCheckoutSession(window.location.origin);
+      const url = await createCheckoutSession(appOrigin());
       window.location.href = url;
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Checkout failed');

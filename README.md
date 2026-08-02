@@ -8,7 +8,7 @@ MVP for [Paralect Product Academy](https://www.paralect.com/academy/product-mana
 
 ## Features
 
-- Landing + pricing + mock Stripe checkout
+- Landing + pricing + Stripe Checkout (test mode)
 - Supabase auth, Postgres, Edge Functions
 - Upload docs → chunks in DB → RAG chat (Groq LLM)
 - Publish bot → embeddable Shadow DOM widget

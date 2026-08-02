@@ -2,41 +2,34 @@
 
 **Role:** Full-stack MVP (design + implementation)  
 **Type:** B2B SaaS — embeddable AI support bot  
-**Stack:** Supabase · Groq · Stripe · React · Edge Functions
+**Stack:** Supabase · Groq · Stripe · React · Edge Functions · pgvector
 
 ## One-liner
 
 Turn company docs into an embeddable AI assistant — real DB, real AI, real billing, production-style widget.
 
-## Comparable work
-
-| Project | What it shows |
-|---------|----------------|
-| [Sender / NN99](https://senndder.ru/) | Landing polish, product narrative |
-| [Platformax](https://platformax.pro/) | SaaS positioning, MVP depth |
-| Yandex Pet Day | Case study format: problem → steps → screenshots |
-
 ## Highlights for portfolio card
 
-1. **Backend:** Supabase Auth, Postgres schema, RLS, 7 Edge Functions  
-2. **AI:** RAG pipeline — doc chunks in DB → Groq Llama 3.3  
+1. **Backend:** Supabase Auth, Postgres schema, RLS, Edge Functions  
+2. **AI:** RAG pipeline — doc chunks in DB → Groq Llama 3.3 (+ pgvector when OpenAI key set)  
 3. **Product:** Plan limits, Stripe Checkout + webhook  
-4. **Embed:** Shadow DOM widget (no CSS conflicts on host sites)  
-5. **Quality:** Playwright + Vitest, written demo guide, CI  
+4. **Embed:** Shadow DOM widget on a Still-style demo storefront  
+5. **v2:** PDF upload, analytics dashboard, vector search  
+6. **Quality:** Playwright + Vitest, written demo guide, CI  
 
-## Suggested card structure (like Pet Day)
+## Suggested card structure
 
 - **Cover:** Landing hero screenshot  
 - **Problem:** Support teams need FAQ bot without engineering sprint  
 - **Solution:** Upload → test → publish → embed  
-- **Screens:** 5–7 steps from `/guide`  
-- **Tech tags:** Supabase, Groq, Stripe, TypeScript, RAG  
-- **Links:** Live · GitHub · Demo guide  
+- **Screens:** 7 steps from `/guide`  
+- **Tech tags:** Supabase, Groq, Stripe, TypeScript, RAG, pgvector  
+- **Links:** Live · GitHub · Demo guide · Case  
 
-## Ideas to add later (v2)
+## Live links
 
-- PDF upload + async ingest queue  
-- pgvector embeddings (schema ready)  
-- Custom widget theme editor  
-- Analytics dashboard (messages, top questions)  
-- Domain allowlist for embed security  
+- App: https://elenasamanchuk.github.io/knowembed/
+- Embed demo: https://elenasamanchuk.github.io/knowembed/embed-demo.html
+- Guide: https://elenasamanchuk.github.io/knowembed/guide
+- Case: https://elenasamanchuk.github.io/knowembed/case.html
+- Repo: https://github.com/ElenaSamanchuk/knowembed

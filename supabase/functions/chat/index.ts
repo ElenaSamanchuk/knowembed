@@ -1,5 +1,6 @@
 import { corsHeaders } from '../_shared/cors.ts';
 import { answerWithContext, findRelevantChunks, PLAN_LIMITS } from '../_shared/ai.ts';
+import { logChatEvent } from '../_shared/embeddings.ts';
 import { createServiceClient, createUserClient } from '../_shared/supabase.ts';
 
 Deno.serve(async (req) => {
@@ -64,6 +65,12 @@ Deno.serve(async (req) => {
       : `I couldn't find this in ${bot.name}'s knowledge base yet. Upload FAQ or product docs and try again.`;
 
     await serviceClient.rpc('increment_message_usage', { p_user_id: authData.user.id });
+    await logChatEvent(serviceClient, {
+      botId,
+      ownerId: authData.user.id,
+      source: 'app',
+      question: message,
+    });
 
     return new Response(JSON.stringify({ answer }), {
       headers: { ...corsHeaders, 'Content-Type': 'application/json' },

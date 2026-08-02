@@ -21,7 +21,7 @@ I completed the **Embeddable Chatbot Builder** assignment. Written walkthrough b
 2. Upload FAQ → chunked & stored in DB  
 3. ChatGPT-like workspace — RAG: DB retrieval + Groq LLM  
 4. Publish → embed via one script tag (Shadow DOM widget)  
-5. Starter / Pro plans + mock Stripe checkout; limits in Edge Functions  
+5. Starter / Pro plans + Stripe Checkout (test mode); limits in Edge Functions  
 
 ## Stack (per assignment)
 
@@ -34,7 +34,7 @@ I completed the **Embeddable Chatbot Builder** assignment. Written walkthrough b
 
 See **[docs/DEMO.md](./DEMO.md)** for full walkthrough with expected results.
 
-Quick path: sign up → Store Assistant → ask *How long is shipping?* → Publish → embed-demo.html → Pricing → mock upgrade.
+Quick path: sign up → Store Assistant → ask *How long is shipping?* → Publish → embed-demo.html → Pricing → Stripe Pro.
 
 ## Tests
 

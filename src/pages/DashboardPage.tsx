@@ -60,6 +60,9 @@ export function DashboardPage() {
         </Link>
         <nav className="app-nav">
           <span className="app-nav-item active">Bots</span>
+          <Link to="/app/analytics" className="app-nav-item">
+            Analytics
+          </Link>
           <Link to="/pricing" className="app-nav-item">
             Upgrade
           </Link>

@@ -1,5 +1,6 @@
 import { corsHeaders } from '../_shared/cors.ts';
 import { answerWithContext, findRelevantChunks } from '../_shared/ai.ts';
+import { logChatEvent } from '../_shared/embeddings.ts';
 import { createServiceClient } from '../_shared/supabase.ts';
 
 Deno.serve(async (req) => {
@@ -20,7 +21,7 @@ Deno.serve(async (req) => {
 
     const { data: published, error: publishedError } = await serviceClient
       .from('published_bots')
-      .select('bot_id, name')
+      .select('bot_id, name, bots(owner_id)')
       .eq('public_id', publicId)
       .single();
 
@@ -35,6 +36,16 @@ Deno.serve(async (req) => {
     const answer = contextBlocks.length
       ? await answerWithContext(message, published.name, contextBlocks)
       : `I couldn't find this in ${published.name}'s knowledge base yet.`;
+
+    const ownerId = (published.bots as { owner_id?: string } | null)?.owner_id;
+    if (ownerId) {
+      await logChatEvent(serviceClient, {
+        botId: published.bot_id,
+        ownerId,
+        source: 'widget',
+        question: message,
+      });
+    }
 
     return new Response(JSON.stringify({ answer }), {
       headers: { ...corsHeaders, 'Content-Type': 'application/json' },

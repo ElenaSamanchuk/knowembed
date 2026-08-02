@@ -17,10 +17,13 @@ export function LandingPage() {
           <div className="hero-copy">
             <p className="mvp-badge">Launch-ready MVP · not a mockup</p>
             <p className="eyebrow">Docs → chatbot → embed</p>
-            <h1>Ship an AI support bot your customers can embed.</h1>
+            <h1>
+              Ship an AI support bot{' '}
+              <span className="gradient-text">your customers can embed.</span>
+            </h1>
             <p className="lead lead--spaced">
-              KnowEmbed is a minimal product: Supabase backend, real RAG chat, Stripe billing,
-              and a production-style widget — built to demo like Platformax or Sender, not a toy UI.
+              KnowEmbed turns your docs into an embeddable AI assistant — Supabase backend, RAG chat,
+              Stripe billing, and a Shadow DOM widget you can drop on any site.
             </p>
             <div className="stack-badges">
               <span>Supabase</span>

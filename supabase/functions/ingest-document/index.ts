@@ -1,5 +1,6 @@
 import { corsHeaders } from '../_shared/cors.ts';
 import { chunkText, PLAN_LIMITS } from '../_shared/ai.ts';
+import { createEmbeddings } from '../_shared/embeddings.ts';
 import { createServiceClient, createUserClient } from '../_shared/supabase.ts';
 
 Deno.serve(async (req) => {
@@ -78,13 +79,14 @@ Deno.serve(async (req) => {
     }
 
     const chunks = chunkText(content, document.id, name);
-    for (const chunk of chunks) {
+    const embeddings = await createEmbeddings(chunks.map((chunk) => chunk.content));
+    for (const [index, chunk] of chunks.entries()) {
       const { error: chunkError } = await serviceClient.from('chunks').insert({
         bot_id: botId,
         document_id: document.id,
         document_name: chunk.documentName,
         content: chunk.content,
-        embedding: null,
+        embedding: embeddings[index] ?? null,
       });
       if (chunkError) throw chunkError;
     }

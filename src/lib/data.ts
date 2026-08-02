@@ -247,3 +247,35 @@ export function buildEmbedSnippet(origin: string, publicId: string): string {
   const anonKey = import.meta.env.VITE_SUPABASE_ANON_KEY ?? '';
   return `<script src="${origin}/widget.js" data-bot-id="${publicId}" data-api="${apiUrl}" data-anon-key="${anonKey}" defer></script>`;
 }
+
+export type ChatAnalytics = {
+  totalMessages: number;
+  messagesLast7Days: number;
+  appMessages: number;
+  widgetMessages: number;
+  topQuestions: Array<{ question: string; count: number }>;
+};
+
+export async function fetchChatAnalytics(): Promise<ChatAnalytics | null> {
+  const [statsResult, topResult] = await Promise.all([
+    supabase.rpc('chat_stats'),
+    supabase.rpc('top_chat_questions', { p_limit: 8 }),
+  ]);
+
+  if (statsResult.error) {
+    console.error('chat_stats failed', statsResult.error);
+    return null;
+  }
+
+  const row = statsResult.data?.[0];
+  return {
+    totalMessages: Number(row?.total_messages ?? 0),
+    messagesLast7Days: Number(row?.messages_last_7_days ?? 0),
+    appMessages: Number(row?.app_messages ?? 0),
+    widgetMessages: Number(row?.widget_messages ?? 0),
+    topQuestions: (topResult.data ?? []).map((item: { question: string; count: number }) => ({
+      question: item.question,
+      count: Number(item.count),
+    })),
+  };
+}

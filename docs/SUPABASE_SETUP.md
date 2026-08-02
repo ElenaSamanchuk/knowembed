@@ -52,5 +52,6 @@ npm run dev
 3. Chat: *How long is shipping?*  
 4. Publish → `/embed-demo.html`
 
-See [DEMO.md](./DEMO.md) for full walkthrough.  
-Russian guide: [SETUP_RU.md](./SETUP_RU.md)
+`supabase/migrations/20260728110000_v2_analytics.sql` — chat analytics for `/app/analytics`.
+
+Optional: add `OPENAI_API_KEY` to enable pgvector embeddings on ingest (falls back to keyword search without it).
