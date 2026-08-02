@@ -1,7 +1,7 @@
 import { Link } from 'react-router-dom';
 import { AppPromoBlock } from '../components/AppPromoBlock';
 import { FaqAccordion } from '../components/FaqAccordion';
-import { HeroLiveWidget } from '../components/HeroLiveWidget';
+import { HeroChatDemo } from '../components/HeroChatDemo';
 import { PageMeta } from '../components/PageMeta';
 import { Reveal } from '../components/Reveal';
 import { SiteFooter } from '../components/SiteFooter';
@@ -122,7 +122,7 @@ export function LandingPage() {
                 </Link>
               </div>
             </div>
-            <HeroLiveWidget />
+            <HeroChatDemo />
           </section>
 
           <section className="hero-pipeline" aria-label="How it works">
