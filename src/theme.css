@@ -1668,13 +1668,13 @@ html {
 .app-promo {
   position: relative;
   display: grid;
-  grid-template-columns: minmax(0, 1fr) minmax(280px, 46%);
+  grid-template-columns: minmax(0, 1fr) minmax(240px, 42%);
   gap: 0;
   align-items: stretch;
   width: 100%;
   max-width: var(--content);
   margin: 0 auto 40px;
-  padding: 28px 0 28px 28px;
+  padding: 28px 0 0 28px;
   border: 1px solid var(--m-border);
   border-radius: var(--m-radius-lg);
   background:
@@ -1685,10 +1685,11 @@ html {
 
 .app-promo-copy {
   position: relative;
+  z-index: 1;
   display: flex;
   flex-direction: column;
   justify-content: center;
-  padding-right: 20px;
+  padding: 0 20px 28px 0;
 }
 
 .app-promo-copy h2 {
@@ -1748,20 +1749,22 @@ html {
 
 .app-promo-visual {
   position: relative;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  min-height: 320px;
-  padding: 8px 24px 8px 8px;
-  overflow: visible;
+  min-height: 0;
+  overflow: hidden;
+  background: linear-gradient(
+    180deg,
+    rgb(80 137 253 / 0.16) 0%,
+    rgb(80 137 253 / 0.06) 55%,
+    rgb(80 137 253 / 0.02) 100%
+  );
 }
 
 .app-promo-phone {
-  position: relative;
-  top: auto;
-  right: auto;
-  width: min(260px, 100%);
-  transform: none;
+  position: absolute;
+  left: 50%;
+  top: 16px;
+  width: min(320px, 94%);
+  transform: translateX(-50%);
   margin: 0;
 }
 
@@ -1791,7 +1794,7 @@ html {
   }
 
   .app-promo-copy {
-    padding-right: 0;
+    padding: 0 0 20px;
   }
 
   .app-promo-copy h2 {
@@ -1799,13 +1802,12 @@ html {
   }
 
   .app-promo-visual {
-    min-height: auto;
-    padding: 16px 0 20px;
-    margin-top: 8px;
+    min-height: 220px;
   }
 
   .app-promo-phone {
-    width: min(240px, 72vw);
+    top: 12px;
+    width: min(280px, 78vw);
   }
 }
 
