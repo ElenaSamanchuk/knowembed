@@ -6,7 +6,7 @@ import { PLANS } from '../lib/plans';
 
 type AppShellProps = {
   children: React.ReactNode;
-  active: 'bots' | 'analytics' | 'workspace';
+  active: 'bots' | 'analytics' | 'workspace' | 'upgrade';
 };
 
 const TAB_ITEMS = [
@@ -39,7 +39,7 @@ const TAB_ITEMS = [
     id: 'upgrade' as const,
     label: 'Upgrade',
     to: '/pricing',
-    actives: [] as const,
+    actives: ['upgrade'] as const,
     icon: (
       <svg width="18" height="18" viewBox="0 0 24 24" fill="none" aria-hidden="true">
         <path d="M12 3l2.4 4.8L20 9l-4 3.9.9 5.6L12 16.8 7.1 18.5 8 12.9 4 9l5.6-1.2L12 3Z" stroke="currentColor" strokeWidth="1.8" strokeLinejoin="round" />

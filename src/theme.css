@@ -1117,7 +1117,6 @@ html {
 
 .app-layout--native .app-topbar,
 .app-layout--native .app-tabbar,
-.app-layout--native .app-backdrop,
 .app-layout--native .app-sidebar-close {
   display: flex;
 }
@@ -1132,7 +1131,7 @@ html {
   left: 0;
   bottom: 0;
   z-index: 100;
-  width: min(300px, 88vw);
+  width: min(320px, calc(100vw - 32px));
   min-height: auto;
   transform: translateX(-105%);
   transition: transform 0.28s var(--ease);
@@ -1143,7 +1142,165 @@ html {
 }
 
 .app-layout--native .app-topbar {
-  padding-top: calc(10px + env(safe-area-inset-top, 0px));
+  padding: 8px 12px;
+  padding-top: calc(8px + env(safe-area-inset-top, 0px));
+  min-height: 48px;
+}
+
+.app-layout--native .app-tabbar {
+  padding: 4px 8px calc(4px + env(safe-area-inset-bottom, 0px));
+}
+
+.app-layout--native .app-tabbar-item {
+  min-height: 44px;
+  padding: 4px 6px;
+  gap: 2px;
+}
+
+.app-layout--native .app-tabbar-label {
+  font-size: 0.62rem;
+}
+
+.app-layout--native .app-main {
+  padding: 16px 12px 20px;
+}
+
+/* Native app — prevent horizontal scroll and tighten admin layout */
+.native-app,
+.native-app body {
+  overflow-x: hidden;
+  max-width: 100%;
+}
+
+.native-app #root {
+  overflow-x: hidden;
+  max-width: 100%;
+}
+
+.native-app .app-main,
+.native-app .native-auth-shell {
+  overflow-x: hidden;
+  min-width: 0;
+  max-width: 100%;
+}
+
+.native-app .native-auth-shell {
+  width: 100%;
+  max-width: min(480px, calc(100% - 24px));
+  margin-inline: auto;
+  padding-top: calc(24px + env(safe-area-inset-top, 0px));
+  padding-bottom: calc(24px + env(safe-area-inset-bottom, 0px));
+}
+
+.native-app .panel-card,
+.native-app .stack,
+.native-app .workspace-grid,
+.native-app .page-heading,
+.native-app .page-heading.inline,
+.native-app .stats-grid,
+.native-app .pricing-grid {
+  min-width: 0;
+  max-width: 100%;
+}
+
+.native-app .workspace-grid {
+  grid-template-columns: minmax(0, 1fr);
+}
+
+.native-app .bot-grid {
+  grid-template-columns: minmax(0, 1fr);
+}
+
+.native-app .page-heading.inline {
+  flex-direction: column;
+  align-items: stretch;
+}
+
+.native-app .page-heading.inline .toolbar {
+  width: 100%;
+}
+
+.native-app .page-heading.inline .toolbar .btn {
+  flex: 1 1 calc(50% - 5px);
+  min-width: 0;
+}
+
+.native-app .doc-list li {
+  flex-wrap: wrap;
+  align-items: flex-start;
+}
+
+.native-app .doc-list li > div {
+  min-width: 0;
+  flex: 1 1 12rem;
+}
+
+.native-app .doc-list li .btn {
+  flex-shrink: 0;
+}
+
+.native-app .code-block,
+.native-app .bot-card code,
+.native-app .analytics-list li span {
+  max-width: 100%;
+  overflow-wrap: anywhere;
+  word-break: break-word;
+}
+
+.native-app .code-block {
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+}
+
+.native-app .analytics-list li {
+  align-items: flex-start;
+}
+
+.native-app .analytics-list li span {
+  flex: 1 1 auto;
+  min-width: 0;
+}
+
+.native-app .analytics-list li strong {
+  flex-shrink: 0;
+}
+
+.native-app .field input,
+.native-app .field textarea,
+.native-app .field select {
+  width: 100%;
+  max-width: 100%;
+  box-sizing: border-box;
+}
+
+.native-app .panel-card {
+  padding: 16px;
+}
+
+.native-app .chat-panel {
+  min-height: min(420px, 55vh);
+}
+
+.native-app .usage-strip {
+  gap: 8px 12px;
+}
+
+.native-app .app-topbar-plan {
+  max-width: 38%;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.native-app .app-topbar-brand {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.native-app h1,
+.native-app h2 {
+  overflow-wrap: anywhere;
 }
 
 .app-tabbar-item {

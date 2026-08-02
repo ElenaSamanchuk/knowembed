@@ -3,6 +3,7 @@ import { Link, Navigate, useNavigate } from 'react-router-dom';
 import { PageMeta } from '../components/PageMeta';
 import { SiteFooter } from '../components/SiteFooter';
 import { SiteHeader } from '../components/SiteHeader';
+import { isNativeApp } from '../lib/native';
 import { supabase } from '../lib/supabase';
 
 type LoginPageProps = {
@@ -17,6 +18,7 @@ export function LoginPage({ mode }: LoginPageProps) {
   const [loading, setLoading] = useState(false);
 
   const isSignUp = mode === 'sign-up';
+  const native = isNativeApp();
 
   const submit = async (event: FormEvent) => {
     event.preventDefault();
@@ -56,8 +58,8 @@ export function LoginPage({ mode }: LoginPageProps) {
         path={isSignUp ? '/signup' : '/login'}
         noIndex
       />
-      <SiteHeader />
-      <main className="page-shell narrow">
+      {native ? null : <SiteHeader />}
+      <main className={`page-shell narrow${native ? ' native-auth-shell' : ''}`}>
         <header className="page-heading page-heading--spaced">
           <p className="eyebrow">{isSignUp ? 'Get started' : 'Welcome back'}</p>
           <h1>{isSignUp ? 'Create your embeddable bot' : 'Sign in to your workspace'}</h1>
@@ -113,7 +115,7 @@ export function LoginPage({ mode }: LoginPageProps) {
           Secured by Supabase Auth. We only use your email to run your workspace
         </p>
       </main>
-      <SiteFooter />
+      {native ? null : <SiteFooter />}
     </>
   );
 }
