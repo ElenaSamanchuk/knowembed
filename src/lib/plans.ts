@@ -22,7 +22,12 @@ export const PLANS: Record<PlanId, Plan> = {
     documents: 3,
     messagesPerMonth: 50,
     branding: true,
-    highlights: ['1 chatbot', '3 knowledge docs', '50 answers / month', 'Embed widget with badge'],
+    highlights: [
+      '1 chatbot for your site',
+      'Up to 3 knowledge docs',
+      '50 AI answers / month',
+      'Widget with KnowEmbed badge',
+    ],
   },
   pro: {
     id: 'pro',
@@ -34,11 +39,11 @@ export const PLANS: Record<PlanId, Plan> = {
     messagesPerMonth: 2000,
     branding: false,
     highlights: [
-      '5 chatbots',
-      '20 docs each',
-      '2,000 answers / month',
+      '5 chatbots — multi-brand or clients',
+      '20 docs per bot',
+      '2,000 AI answers / month',
       'Remove widget branding',
-      'Priority support',
+      'Priority email support',
     ],
   },
 };

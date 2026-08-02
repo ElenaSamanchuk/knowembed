@@ -16,13 +16,16 @@ export function SiteHeader() {
           KnowEmbed
         </Link>
         <nav className="site-nav-pill" aria-label="Primary">
-          <Link to="/pricing" className={navClass('/pricing')}>
+          <Link to="/pricing" className={navClass('/pricing')} aria-current={navClass('/pricing') ? 'page' : undefined}>
             Pricing
           </Link>
-          <Link to="/guide" className={navClass('/guide')}>
+          <Link to="/guide" className={navClass('/guide')} aria-current={navClass('/guide') ? 'page' : undefined}>
             Demo guide
           </Link>
-          <a href={publicPath('embed-demo.html')} className={location.pathname.includes('embed-demo') ? 'is-active' : ''}>
+          <a
+            href={publicPath('embed-demo.html')}
+            className={location.pathname.includes('embed-demo') ? 'is-active' : ''}
+          >
             Embed demo
           </a>
         </nav>

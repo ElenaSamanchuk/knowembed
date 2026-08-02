@@ -1,10 +1,27 @@
 import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
+import { PageMeta } from '../components/PageMeta';
+import { SiteFooter } from '../components/SiteFooter';
 import { SiteHeader } from '../components/SiteHeader';
 import { useAuth } from '../context/AuthProvider';
 import { createCheckoutSession } from '../lib/api';
 import { appOrigin } from '../lib/paths';
 import { PLANS } from '../lib/plans';
+
+const FAQ = [
+  {
+    q: 'What happens on Starter?',
+    a: 'You get one bot, three docs, and 50 answers per month — enough to validate the full embed flow.',
+  },
+  {
+    q: 'Can I cancel Pro anytime?',
+    a: 'Yes. Billing runs through Stripe; downgrade when your subscription period ends.',
+  },
+  {
+    q: 'Are limits enforced?',
+    a: 'Yes — bots, documents, and monthly answers are checked server-side in Edge Functions.',
+  },
+];
 
 export function PricingPage() {
   const navigate = useNavigate();
@@ -35,19 +52,25 @@ export function PricingPage() {
 
   return (
     <>
+      <PageMeta
+        title="Pricing"
+        description="KnowEmbed Starter is free. Pro adds more bots, docs, white-label widget, and 2,000 AI answers per month. Stripe Checkout in test mode."
+        path="/pricing"
+      />
       <SiteHeader />
       <main className="page-shell">
         <header className="page-heading page-heading--spaced">
           <p className="eyebrow">Pricing</p>
-          <h1>Plans for launch-ready teams</h1>
+          <h1>Start free. Scale when embed traffic grows.</h1>
           <p className="lead lead--spaced">
-            Pro upgrades through Stripe Checkout (test mode). Plan limits are enforced in Supabase Edge Functions.
+            Every plan includes the full pipeline: upload docs, in-app chat, publish, and embed.
+            Pro upgrades through Stripe Checkout (test mode today).
           </p>
         </header>
 
         {error ? <div className="notice notice--error">{error}</div> : null}
 
-        <section className="pricing-grid">
+        <section className="pricing-grid" aria-label="Plans">
           {Object.values(PLANS).map((plan) => (
             <article key={plan.id} className={`price-card ${plan.id === 'pro' ? 'price-card--featured' : ''}`}>
               <h2>{plan.name}</h2>
@@ -75,14 +98,30 @@ export function PricingPage() {
         <section className="panel-card stack billing-note">
           <h2>Stripe test mode</h2>
           <p className="muted">
-            Use test card <code>4242 4242 4242 4242</code>, any future expiry, any CVC. No real charges.
+            Use test card <code>4242 4242 4242 4242</code>, any future expiry, any CVC. No real charges while
+            you evaluate the product.
           </p>
+        </section>
+
+        <section className="faq-section faq-section--compact" aria-labelledby="pricing-faq">
+          <h2 id="pricing-faq" className="section-title">
+            Pricing FAQ
+          </h2>
+          <dl className="faq-list">
+            {FAQ.map((item) => (
+              <div key={item.q} className="faq-item panel-card">
+                <dt>{item.q}</dt>
+                <dd className="muted">{item.a}</dd>
+              </div>
+            ))}
+          </dl>
         </section>
 
         <p className="muted center section-foot">
           Already signed in? <Link to="/app">Open dashboard</Link>
         </p>
       </main>
+      <SiteFooter />
     </>
   );
 }

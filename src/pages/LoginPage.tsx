@@ -1,5 +1,7 @@
 import { FormEvent, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { PageMeta } from '../components/PageMeta';
+import { SiteFooter } from '../components/SiteFooter';
 import { SiteHeader } from '../components/SiteHeader';
 import { supabase } from '../lib/supabase';
 
@@ -30,7 +32,7 @@ export function LoginPage() {
     }
 
     if (!response.data.session) {
-      setError('Account created, but no session was returned. Try signing in instead.');
+      setError('Account created — check your email if confirmation is required, then sign in.');
       setMode('sign-in');
       return;
     }
@@ -40,13 +42,20 @@ export function LoginPage() {
 
   return (
     <>
+      <PageMeta
+        title="Sign in"
+        description="Create a free KnowEmbed account. Upload docs, test your AI chatbot, and embed it on any website."
+        path="/login"
+        noIndex
+      />
       <SiteHeader />
       <main className="page-shell narrow">
         <header className="page-heading page-heading--spaced">
-          <p className="eyebrow">Sign in</p>
+          <p className="eyebrow">{mode === 'sign-up' ? 'Get started' : 'Welcome back'}</p>
           <h1>Start building your embeddable bot</h1>
           <p className="lead lead--spaced">
-            Supabase Postgres + Groq AI with your docs as context.
+            Free Starter plan — no card required. Your workspace includes a demo bot so you can chat
+            in under a minute.
           </p>
         </header>
 
@@ -56,6 +65,7 @@ export function LoginPage() {
             <input
               type="email"
               required
+              autoComplete="email"
               value={email}
               onChange={(event) => setEmail(event.target.value)}
               placeholder="you@company.com"
@@ -67,12 +77,13 @@ export function LoginPage() {
               type="password"
               required
               minLength={6}
+              autoComplete={mode === 'sign-up' ? 'new-password' : 'current-password'}
               value={password}
               onChange={(event) => setPassword(event.target.value)}
               placeholder="At least 6 characters"
             />
           </label>
-          {error ? <p className="form-error">{error}</p> : null}
+          {error ? <p className="form-error" role="alert">{error}</p> : null}
           <button type="submit" className="btn btn-primary" disabled={loading}>
             {loading ? 'Please wait…' : mode === 'sign-up' ? 'Create account' : 'Sign in'}
           </button>
@@ -88,7 +99,12 @@ export function LoginPage() {
             {mode === 'sign-up' ? 'Sign in' : 'Create account'}
           </button>
         </p>
+
+        <p className="muted center trust-note">
+          Secured by Supabase Auth. We only use your email to run your workspace.
+        </p>
       </main>
+      <SiteFooter />
     </>
   );
 }

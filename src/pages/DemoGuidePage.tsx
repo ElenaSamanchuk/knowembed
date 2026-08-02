@@ -1,5 +1,7 @@
 import { Link } from 'react-router-dom';
+import { PageMeta } from '../components/PageMeta';
 import { publicPath } from '../lib/paths';
+import { SiteFooter } from '../components/SiteFooter';
 import { SiteHeader } from '../components/SiteHeader';
 
 type GuideStep = {
@@ -12,8 +14,8 @@ type GuideStep = {
 const STEPS: GuideStep[] = [
   {
     title: 'Landing & pricing',
-    body: 'Open the marketing site. Confirm hero, MVP badge, feature cards, and Starter / Pro plans.',
-    expected: 'Clear value prop; links to Sign in and Pricing work.',
+    body: 'Open the marketing site. Review the hero, feature cards, and Starter / Pro plans.',
+    expected: 'Clear value proposition; Sign in and Pricing links work.',
     shot: '/docs/screenshots/01-landing.png',
   },
   {
@@ -57,7 +59,7 @@ const STEPS: GuideStep[] = [
 function Shot({ alt, src }: { alt: string; src: string }) {
   return (
     <figure className="guide-shot">
-      <img className="guide-shot-img" src={src} alt={alt} loading="lazy" />
+      <img className="guide-shot-img" src={src} alt={alt} loading="lazy" width={800} height={450} />
     </figure>
   );
 }
@@ -65,13 +67,19 @@ function Shot({ alt, src }: { alt: string; src: string }) {
 export function DemoGuidePage() {
   return (
     <>
+      <PageMeta
+        title="Demo guide"
+        description="Step-by-step KnowEmbed walkthrough with screenshots: sign up, upload docs, test AI chat, embed widget, upgrade with Stripe."
+        path="/guide"
+      />
       <SiteHeader />
       <main className="page-shell guide-page">
         <header className="page-heading page-heading--spaced">
-          <p className="eyebrow">Paralect deliverable</p>
+          <p className="eyebrow">Product walkthrough</p>
           <h1>Demo guide</h1>
           <p className="lead lead--spaced">
-            Written walkthrough with expected results and screenshots from the live demo flow.
+            End-to-end flow with expected results and screenshots from the live app — ideal for review
+            or portfolio documentation.
           </p>
           <div className="hero-actions">
             <Link to="/login" className="btn btn-primary">
@@ -89,7 +97,8 @@ export function DemoGuidePage() {
         <section className="panel-card stack guide-meta">
           <h2>Stack</h2>
           <p className="muted">
-            Supabase Auth + Postgres · Edge Functions · Groq LLM · Stripe Checkout (test) · React app · Shadow DOM widget
+            Supabase Auth + Postgres · Edge Functions · Groq LLM · Stripe Checkout · React app · Shadow
+            DOM widget · PDF ingest · pgvector · analytics
           </p>
         </section>
 
@@ -110,11 +119,13 @@ export function DemoGuidePage() {
         <section className="panel-card stack">
           <h2>Portfolio angle</h2>
           <p>
-            Position as <strong>full-stack MVP</strong>: backend (Supabase + Edge Functions), AI integration (RAG + Groq),
-            payments (Stripe webhooks), embeddable widget, PDF ingest, pgvector search, and analytics.
+            Position as <strong>full-stack MVP</strong>: backend (Supabase + Edge Functions), AI
+            integration (RAG + Groq), payments (Stripe webhooks), embeddable widget, PDF ingest,
+            pgvector search, and analytics.
           </p>
         </section>
       </main>
+      <SiteFooter />
     </>
   );
 }
