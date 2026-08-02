@@ -10,7 +10,7 @@ const APP_FEATURES = [
   { title: 'Native UX', text: 'Bottom tabs, safe areas, and hardware back support' },
 ];
 
-const APP_SCREEN = publicPath('marketing/app-screen.png');
+const APP_SCREEN = publicPath('marketing/app-admin-mobile.png');
 
 function AndroidIcon() {
   return (
@@ -40,14 +40,12 @@ export function AppPromoBlock() {
           <p className="eyebrow">Android app</p>
           <h2 id="app-promo-heading">Manage your chatbots from your phone</h2>
           <p className="section-lead app-promo-lead">
-            Native Android app with the same admin workspace — bots, knowledge upload, test chat,
-            analytics, and billing. Built with Capacitor for a polished mobile UX
+            Same admin workspace on Android — bots, docs, chat, analytics, billing
           </p>
           <ul className="app-promo-features">
             {APP_FEATURES.map((item) => (
               <li key={item.title}>
                 <strong>{item.title}</strong>
-                <span>{item.text}</span>
               </li>
             ))}
           </ul>

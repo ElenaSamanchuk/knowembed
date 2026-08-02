@@ -1,7 +1,7 @@
 import { Link } from 'react-router-dom';
 import { AppPromoBlock } from '../components/AppPromoBlock';
 import { FaqAccordion } from '../components/FaqAccordion';
-import { HeroDemoPanel } from '../components/HeroDemoPanel';
+import { HeroLiveWidget } from '../components/HeroLiveWidget';
 import { HeroMetricsStrip } from '../components/HeroMetricsStrip';
 import { HeroSocialProof } from '../components/HeroSocialProof';
 import { PageMeta } from '../components/PageMeta';
@@ -101,11 +101,8 @@ export function LandingPage() {
           <section className="hero-block hero-block--mvp">
             <div className="hero-copy">
               <p className="mvp-badge">Docs → chatbot → embed</p>
-              <h1>
-                Turn your docs into
-                <br />
-                an AI bot
-                <br />
+              <h1 className="hero-title-lines">
+                Turn your docs into an AI bot{' '}
                 <span className="gradient-text">your customers can embed</span>
               </h1>
               <p className="lead lead--spaced">
@@ -131,7 +128,7 @@ export function LandingPage() {
                 </Link>
               </div>
             </div>
-            <HeroDemoPanel />
+            <HeroLiveWidget />
           </section>
 
           <HeroMetricsStrip />
@@ -240,15 +237,14 @@ export function LandingPage() {
         </Reveal>
 
         <Reveal delay={240}>
-          <section className="cta-band cta-band--dark">
-            <div className="cta-band__grain" aria-hidden="true" />
+          <section className="cta-band">
             <h2>Launch your bot in one afternoon</h2>
             <p>User guide with screenshots — sign up, upload docs, test chat, embed, and upgrade</p>
             <div className="hero-actions cta-band-actions">
-              <Link to="/guide" className="btn btn-primary btn-lg cta-primary-dark">
+              <Link to="/guide" className="btn btn-ghost btn-lg cta-ghost">
                 Read user guide
               </Link>
-              <Link to="/signup" className="btn btn-ghost btn-lg cta-ghost-dark">
+              <Link to="/signup" className="btn btn-primary btn-lg cta-primary">
                 Ship your first bot
               </Link>
             </div>

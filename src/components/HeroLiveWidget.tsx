@@ -5,15 +5,9 @@ export function HeroLiveWidget() {
 
   return (
     <div className="hero-live-demo">
-      <div className="hero-live-demo__glow" aria-hidden="true" />
-      <div className="hero-live-demo__frame">
+      <div className="hero-live-demo__frame panel-card">
         <div className="hero-live-demo__chrome">
-          <div className="hero-showcase__dots" aria-hidden="true">
-            <span className="hero-showcase__dot hero-showcase__dot--red" />
-            <span className="hero-showcase__dot hero-showcase__dot--yellow" />
-            <span className="hero-showcase__dot hero-showcase__dot--green" />
-          </div>
-          <p className="hero-showcase__url">still-store.demo · KnowEmbed widget</p>
+          <p className="hero-live-demo__label">Live embed preview</p>
           <span className="hero-live-demo__live">Live</span>
         </div>
         <div className="hero-live-demo__viewport">
@@ -25,9 +19,7 @@ export function HeroLiveWidget() {
           />
         </div>
       </div>
-      <p className="hero-live-demo__hint muted">
-        Open the chat bubble — real AI answers from the demo FAQ
-      </p>
+      <p className="hero-live-demo__hint muted">Click the chat bubble — real AI answers from the demo FAQ</p>
     </div>
   );
 }
