@@ -1,4 +1,5 @@
 import { apkDownloadUrl } from '../lib/native';
+import { publicPath } from '../lib/paths';
 import { Reveal } from './Reveal';
 
 const APP_FEATURES = [
@@ -7,6 +8,8 @@ const APP_FEATURES = [
   { title: 'Analytics', text: 'Track widget questions and in-app usage' },
   { title: 'Native UX', text: 'Bottom tabs, safe areas, and hardware back support' },
 ];
+
+const APP_SCREENSHOT = publicPath('marketing/app-admin-mobile.png');
 
 function AndroidIcon() {
   return (
@@ -18,29 +21,22 @@ function AndroidIcon() {
 
 function PhoneMockup() {
   return (
-    <div className="app-promo-phone" aria-hidden="true">
-      <div className="app-promo-phone-notch" />
-      <div className="app-promo-phone-screen">
-        <div className="app-promo-phone-topbar">
-          <span>KnowEmbed</span>
-          <span className="app-promo-phone-badge">Pro</span>
+    <figure className="app-promo-device" aria-label="KnowEmbed Android app — bots dashboard">
+      <div className="app-promo-device__frame">
+        <div className="app-promo-device__island" aria-hidden="true" />
+        <div className="app-promo-device__screen">
+          <img
+            src={APP_SCREENSHOT}
+            alt="KnowEmbed mobile admin — bot list with bottom navigation"
+            width={704}
+            height={1523}
+            loading="lazy"
+            decoding="async"
+          />
         </div>
-        <div className="app-promo-phone-card">
-          <p className="app-promo-phone-label">Your bots</p>
-          <strong>Still Store Support</strong>
-          <span className="app-promo-phone-pill">Published</span>
-        </div>
-        <div className="app-promo-phone-card app-promo-phone-card--muted">
-          <p className="app-promo-phone-label">Draft</p>
-          <strong>FAQ Assistant</strong>
-        </div>
-        <div className="app-promo-phone-tabbar">
-          <span className="active">Bots</span>
-          <span>Analytics</span>
-          <span>Upgrade</span>
-        </div>
+        <div className="app-promo-device__home" aria-hidden="true" />
       </div>
-    </div>
+    </figure>
   );
 }
 
