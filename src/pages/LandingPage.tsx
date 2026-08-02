@@ -160,7 +160,7 @@ export function LandingPage() {
             <h2 id="pricing-heading" className="section-title">
               Simple pricing
             </h2>
-            <p className="lead section-lead section-lead--spaced">
+            <p className="section-lead">
               Start free. Upgrade when you need more bots and white-label embed
             </p>
             <div className="pricing-grid landing-pricing">

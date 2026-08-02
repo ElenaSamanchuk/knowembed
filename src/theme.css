@@ -631,16 +631,9 @@ html {
 }
 
 .section-lead {
-  margin: 0 0 40px;
+  margin: 0 0 24px;
   max-width: 52ch;
-}
-
-.section-lead--spaced {
-  margin-bottom: 56px;
-}
-
-.pricing-section .section-lead--spaced {
-  margin-bottom: 64px;
+  color: var(--m-muted);
 }
 
 .use-cases {
