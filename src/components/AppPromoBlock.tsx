@@ -9,7 +9,7 @@ const APP_FEATURES = [
   { title: 'Native UX', text: 'Bottom tabs, safe areas, and hardware back support' },
 ];
 
-const APP_SCREENSHOT = publicPath('marketing/app-admin-mobile.png');
+const PHONE_MOCKUP = publicPath('marketing/app-phone-mockup.png');
 
 function AndroidIcon() {
   return (
@@ -22,20 +22,15 @@ function AndroidIcon() {
 function PhoneMockup() {
   return (
     <figure className="app-promo-device" aria-label="KnowEmbed Android app — bots dashboard">
-      <div className="app-promo-device__frame">
-        <div className="app-promo-device__island" aria-hidden="true" />
-        <div className="app-promo-device__screen">
-          <img
-            src={APP_SCREENSHOT}
-            alt="KnowEmbed mobile admin — bot list with bottom navigation"
-            width={704}
-            height={1523}
-            loading="lazy"
-            decoding="async"
-          />
-        </div>
-        <div className="app-promo-device__home" aria-hidden="true" />
-      </div>
+      <img
+        className="app-promo-device__mockup"
+        src={PHONE_MOCKUP}
+        alt="KnowEmbed on Android — dashboard with bots, analytics, and upgrade tabs"
+        width={600}
+        height={1296}
+        loading="lazy"
+        decoding="async"
+      />
     </figure>
   );
 }

@@ -13,6 +13,7 @@
     "android:release": "npm run build:android && npm run android:apk && node scripts/copy-apk.mjs",
     "screenshots:og": "node scripts/capture-og-image.mjs",
     "screenshots:app": "CAPTURE_APP_SCREENSHOT=1 npx playwright test capture-app-screenshot",
+    "mockup:app": "node scripts/capture-app-screen.mjs && node scripts/render-app-mockup.mjs",
     "icons:generate": "node scripts/generate-app-icons.mjs",
     "preview": "vite preview",
     "test": "vitest run",
