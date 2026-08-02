@@ -419,11 +419,12 @@ a.btn,
 
 .cta-band h2 {
   margin: 0 0 8px;
+  color: #fff;
 }
 
 .cta-band p {
   margin: 0 0 18px;
-  color: rgba(255, 255, 255, 0.88);
+  color: rgba(255, 255, 255, 0.92);
 }
 
 .cta-band-actions {
@@ -431,7 +432,7 @@ a.btn,
 }
 
 .page-shell {
-  max-width: 960px;
+  max-width: var(--content);
   margin: 0 auto;
   padding: 88px 24px 80px;
 }

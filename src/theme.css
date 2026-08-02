@@ -249,6 +249,12 @@ body {
   background: linear-gradient(102deg, #647dd7 0%, #5089fd 55%, #3d7aed 100%);
   border-radius: var(--m-radius-lg);
   box-shadow: 0 16px 40px rgba(80, 137, 253, 0.28);
+  color: #fff;
+}
+
+.cta-band h2,
+.cta-band p {
+  color: #fff;
 }
 
 .cta-band .btn-primary.cta-primary {
@@ -901,7 +907,7 @@ html {
 }
 
 .site-footer-copy {
-  max-width: 1080px;
+  max-width: var(--content);
   margin: 0 auto;
   text-align: center;
   font-size: 0.82rem;
@@ -917,7 +923,8 @@ html {
   grid-template-columns: 1fr minmax(240px, 320px);
   gap: 40px;
   align-items: center;
-  max-width: var(--content);
+  width: min(920px, calc(100% - 48px));
+  max-width: 920px;
   margin: 0 auto 72px;
   padding: 36px;
   border: 1px solid var(--m-border);
