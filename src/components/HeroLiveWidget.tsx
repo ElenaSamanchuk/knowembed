@@ -19,7 +19,6 @@ export function HeroLiveWidget() {
           />
         </div>
       </div>
-      <p className="hero-live-demo__hint muted">Click the chat bubble — real AI answers from the demo FAQ</p>
     </div>
   );
 }

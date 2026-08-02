@@ -4,10 +4,10 @@ import { publicPath } from '../lib/paths';
 import { Reveal } from './Reveal';
 
 const APP_FEATURES = [
-  { title: 'Bots on the go', text: 'Create, publish, and manage chatbots from your phone' },
-  { title: 'Test answers', text: 'ChatGPT-style workspace with your knowledge base' },
-  { title: 'Analytics', text: 'Track widget questions and in-app usage' },
-  { title: 'Native UX', text: 'Bottom tabs, safe areas, and hardware back support' },
+  'Bots on the go',
+  'Test answers',
+  'Analytics',
+  'Native UX',
 ];
 
 const APP_SCREEN = publicPath('marketing/app-admin-mobile.png');
@@ -20,33 +20,21 @@ function AndroidIcon() {
   );
 }
 
-function PhoneMockup() {
-  return (
-    <PhoneDeviceFrame
-      className="app-promo-device"
-      src={APP_SCREEN}
-      alt="KnowEmbed on Android — dashboard with bots, analytics, and upgrade tabs"
-    />
-  );
-}
-
 export function AppPromoBlock() {
   const downloadHref = apkDownloadUrl();
 
   return (
     <Reveal delay={100}>
-      <section className="app-promo" aria-labelledby="app-promo-heading">
+      <section className="app-promo app-promo--showcase" aria-labelledby="app-promo-heading">
         <div className="app-promo-copy">
           <p className="eyebrow">Android app</p>
           <h2 id="app-promo-heading">Manage your chatbots from your phone</h2>
-          <p className="section-lead app-promo-lead">
+          <p className="app-promo-lead">
             Same admin workspace on Android — bots, docs, chat, analytics, billing
           </p>
           <ul className="app-promo-features">
-            {APP_FEATURES.map((item) => (
-              <li key={item.title}>
-                <strong>{item.title}</strong>
-              </li>
+            {APP_FEATURES.map((title) => (
+              <li key={title}>{title}</li>
             ))}
           </ul>
           <div className="app-promo-actions">
@@ -54,12 +42,16 @@ export function AppPromoBlock() {
               <AndroidIcon />
               Download APK
             </a>
-            <p className="muted app-promo-note">
-              Direct install · Android 8+ · No Play Store required
-            </p>
+            <p className="muted app-promo-note">Direct install · Android 8+</p>
           </div>
         </div>
-        <PhoneMockup />
+        <div className="app-promo-visual" aria-hidden="true">
+          <PhoneDeviceFrame
+            className="app-promo-phone phone-device--showcase"
+            src={APP_SCREEN}
+            alt=""
+          />
+        </div>
       </section>
     </Reveal>
   );

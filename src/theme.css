@@ -252,6 +252,10 @@ body {
   color: var(--m-muted);
 }
 
+.stack-badges--hero {
+  margin-bottom: 16px;
+}
+
 .cta-band {
   background: linear-gradient(102deg, #647dd7 0%, #5089fd 55%, #3d7aed 100%);
   border-radius: var(--m-radius-lg);
@@ -708,9 +712,8 @@ body {
 }
 
 .hero-pipeline {
-  margin-top: 8px;
-  padding-top: 28px;
-  border-top: 1px solid var(--m-border);
+  margin-top: 32px;
+  padding-top: 0;
 }
 
 .pipeline-list--inline {
@@ -1436,60 +1439,70 @@ html {
 
 /* ── Android app promo (landing) ── */
 .app-promo {
+  position: relative;
   display: grid;
-  grid-template-columns: minmax(0, 1fr) minmax(180px, 220px);
-  gap: 20px;
-  align-items: center;
+  grid-template-columns: minmax(0, 1fr) minmax(280px, 46%);
+  gap: 0;
+  align-items: stretch;
   width: 100%;
   max-width: var(--content);
-  margin: 0 auto 36px;
-  padding: 18px 22px;
+  margin: 0 auto 40px;
+  padding: 28px 0 28px 28px;
   border: 1px solid var(--m-border);
   border-radius: var(--m-radius-lg);
   background:
     linear-gradient(135deg, rgb(80 137 253 / 0.08), transparent 55%),
     var(--m-bg-subtle);
+  overflow: hidden;
+}
+
+.app-promo-copy {
+  position: relative;
+  z-index: 2;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding-right: 20px;
 }
 
 .app-promo-copy h2 {
-  margin: 0 0 8px;
-  font-size: clamp(1.35rem, 2.5vw, 1.65rem);
+  margin: 0 0 10px;
+  font-size: clamp(1.4rem, 2.5vw, 1.75rem);
+  max-width: 14ch;
 }
 
 .app-promo-lead {
-  margin-bottom: 12px;
+  margin: 0 0 16px;
+  max-width: 36ch;
+  color: var(--m-muted);
   font-size: 0.92rem;
+  line-height: 1.55;
 }
 
 .app-promo-features {
   list-style: none;
-  margin: 0 0 14px;
+  margin: 0 0 18px;
   padding: 0;
-  display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: 6px 12px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
 }
 
 .app-promo-features li {
-  display: block;
-}
-
-.app-promo-features strong {
-  font-size: 0.84rem;
+  padding: 6px 12px;
+  border-radius: 999px;
+  border: 1px solid var(--m-border);
+  background: #fff;
+  font-size: 0.8rem;
   font-weight: 600;
   color: var(--m-ink);
-}
-
-.app-promo-features span {
-  color: var(--m-muted);
-  font-size: 0.88rem;
 }
 
 .app-promo-actions {
   display: flex;
   flex-direction: column;
   align-items: flex-start;
-  gap: 10px;
+  gap: 8px;
 }
 
 .app-promo-download {
@@ -1504,31 +1517,66 @@ html {
 
 .app-promo-note {
   margin: 0;
-  font-size: 0.82rem;
+  font-size: 0.8rem;
 }
 
-.app-promo-device {
+.app-promo-visual {
+  position: relative;
+  min-height: 300px;
+  overflow: hidden;
+}
+
+.app-promo-phone {
+  position: absolute;
+  top: 50%;
+  right: -6%;
+  width: min(340px, 95%);
+  transform: translateY(-42%);
   margin: 0;
-  justify-self: center;
-  width: 100%;
-  max-width: 220px;
+}
+
+.phone-device--showcase {
+  padding: 14px 12px 16px;
+  border-radius: 44px;
+  background: linear-gradient(160deg, #f2f2f7 0%, #d1d1d6 18%, #1c1c1e 42%, #2d2d32 100%);
+  box-shadow:
+    0 24px 48px rgb(15 23 42 / 0.18),
+    0 0 0 1px rgb(255 255 255 / 0.5) inset;
+}
+
+.phone-device--showcase .phone-device__screen {
+  border-radius: 32px;
+}
+
+.phone-device--showcase .phone-device__island {
+  width: 88px;
+  height: 24px;
+  top: 10px;
 }
 
 @media (max-width: 860px) {
   .app-promo {
     grid-template-columns: 1fr;
-    padding: 16px 18px;
-    gap: 16px;
+    padding: 22px 20px 0;
   }
 
-  .app-promo-features {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
+  .app-promo-copy {
+    padding-right: 0;
   }
 
-  .app-promo-device {
-    order: -1;
-    max-width: 200px;
-    margin-inline: auto;
+  .app-promo-copy h2 {
+    max-width: none;
+  }
+
+  .app-promo-visual {
+    min-height: 280px;
+    margin-top: 8px;
+  }
+
+  .app-promo-phone {
+    right: 50%;
+    transform: translate(50%, -38%);
+    width: min(280px, 78vw);
   }
 }
 

@@ -2,8 +2,6 @@ import { Link } from 'react-router-dom';
 import { AppPromoBlock } from '../components/AppPromoBlock';
 import { FaqAccordion } from '../components/FaqAccordion';
 import { HeroLiveWidget } from '../components/HeroLiveWidget';
-import { HeroMetricsStrip } from '../components/HeroMetricsStrip';
-import { HeroSocialProof } from '../components/HeroSocialProof';
 import { PageMeta } from '../components/PageMeta';
 import { Reveal } from '../components/Reveal';
 import { SiteFooter } from '../components/SiteFooter';
@@ -82,8 +80,6 @@ const FAQ = [
   },
 ];
 
-const WIDGET_SNIPPET = `<script src="${publicPath('widget.js')}" data-bot-id="demo-store-assistant"></script>`;
-
 export function LandingPage() {
   return (
     <>
@@ -100,7 +96,12 @@ export function LandingPage() {
         <Reveal>
           <section className="hero-block hero-block--mvp">
             <div className="hero-copy">
-              <p className="mvp-badge">Docs → chatbot → embed</p>
+              <div className="stack-badges stack-badges--hero" aria-label="Tech stack">
+                <span>Supabase</span>
+                <span>Groq AI</span>
+                <span>Stripe</span>
+                <span>Edge Functions</span>
+              </div>
               <h1 className="hero-title-lines">
                 Turn your docs into an AI bot{' '}
                 <span className="gradient-text">your customers can embed</span>
@@ -109,13 +110,6 @@ export function LandingPage() {
                 Answer FAQs 24/7 from your own knowledge base. Upload content, preview answers in-app,
                 then drop a lightweight widget on any website — one script tag
               </p>
-              <HeroSocialProof />
-              <div className="stack-badges" aria-label="Tech stack">
-                <span>Supabase</span>
-                <span>Groq AI</span>
-                <span>Stripe</span>
-                <span>Edge Functions</span>
-              </div>
               <div className="hero-actions">
                 <Link to="/signup" className="btn btn-primary btn-lg">
                   Ship your first bot
@@ -131,8 +125,6 @@ export function LandingPage() {
             <HeroLiveWidget />
           </section>
 
-          <HeroMetricsStrip />
-
           <section className="hero-pipeline" aria-label="How it works">
             <p className="eyebrow">How it works</p>
             <ol className="pipeline-list pipeline-list--inline">
@@ -146,15 +138,6 @@ export function LandingPage() {
                 </li>
               ))}
             </ol>
-            <div className="hero-terminal panel-card">
-              <p className="eyebrow">Embed snippet</p>
-              <pre className="hero-terminal__code">
-                <code>{WIDGET_SNIPPET}</code>
-              </pre>
-              <p className="hero-terminal__status">
-                <span aria-hidden="true">→</span> Widget live on your site
-              </p>
-            </div>
           </section>
         </Reveal>
 
