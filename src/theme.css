@@ -1685,7 +1685,6 @@ html {
 
 .app-promo-copy {
   position: relative;
-  z-index: 2;
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -1749,16 +1748,20 @@ html {
 
 .app-promo-visual {
   position: relative;
-  min-height: 300px;
-  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 320px;
+  padding: 8px 24px 8px 8px;
+  overflow: visible;
 }
 
 .app-promo-phone {
-  position: absolute;
-  top: 50%;
-  right: -6%;
-  width: min(340px, 95%);
-  transform: translateY(-42%);
+  position: relative;
+  top: auto;
+  right: auto;
+  width: min(260px, 100%);
+  transform: none;
   margin: 0;
 }
 
@@ -1796,14 +1799,13 @@ html {
   }
 
   .app-promo-visual {
-    min-height: 280px;
+    min-height: auto;
+    padding: 16px 0 20px;
     margin-top: 8px;
   }
 
   .app-promo-phone {
-    right: 50%;
-    transform: translate(50%, -38%);
-    width: min(280px, 78vw);
+    width: min(240px, 72vw);
   }
 }
 
