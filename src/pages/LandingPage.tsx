@@ -1,4 +1,5 @@
 import { Link } from 'react-router-dom';
+import { AppPromoBlock } from '../components/AppPromoBlock';
 import { FaqAccordion } from '../components/FaqAccordion';
 import { PageMeta } from '../components/PageMeta';
 import { Reveal } from '../components/Reveal';
@@ -124,6 +125,8 @@ export function LandingPage() {
             </div>
           </section>
         </Reveal>
+
+        <AppPromoBlock />
 
         <Reveal delay={80}>
           <section className="use-cases" aria-labelledby="use-cases-heading">

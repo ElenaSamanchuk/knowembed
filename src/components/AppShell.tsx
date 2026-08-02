@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthProvider';
+import { isNativeApp } from '../lib/native';
 import { PLANS } from '../lib/plans';
 
 type AppShellProps = {
@@ -9,9 +10,42 @@ type AppShellProps = {
 };
 
 const TAB_ITEMS = [
-  { id: 'bots' as const, label: 'Bots', to: '/app', actives: ['bots', 'workspace'] as const },
-  { id: 'analytics' as const, label: 'Analytics', to: '/app/analytics', actives: ['analytics'] as const },
-  { id: 'upgrade' as const, label: 'Upgrade', to: '/pricing', actives: [] as const },
+  {
+    id: 'bots' as const,
+    label: 'Bots',
+    to: '/app',
+    actives: ['bots', 'workspace'] as const,
+    icon: (
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+        <rect x="4" y="6" width="16" height="12" rx="3" stroke="currentColor" strokeWidth="2" />
+        <circle cx="9" cy="12" r="1.2" fill="currentColor" />
+        <circle cx="12" cy="12" r="1.2" fill="currentColor" />
+        <circle cx="15" cy="12" r="1.2" fill="currentColor" />
+      </svg>
+    ),
+  },
+  {
+    id: 'analytics' as const,
+    label: 'Analytics',
+    to: '/app/analytics',
+    actives: ['analytics'] as const,
+    icon: (
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+        <path d="M5 19V11M12 19V5M19 19v-7" stroke="currentColor" strokeWidth="2" strokeLinecap="round" />
+      </svg>
+    ),
+  },
+  {
+    id: 'upgrade' as const,
+    label: 'Upgrade',
+    to: '/pricing',
+    actives: [] as const,
+    icon: (
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+        <path d="M12 3l2.4 4.8L20 9l-4 3.9.9 5.6L12 16.8 7.1 18.5 8 12.9 4 9l5.6-1.2L12 3Z" stroke="currentColor" strokeWidth="1.8" strokeLinejoin="round" />
+      </svg>
+    ),
+  },
 ];
 
 function MenuIcon({ open }: { open: boolean }) {
@@ -65,8 +99,12 @@ export function AppShell({ children, active }: AppShellProps) {
   const isTabActive = (actives: readonly string[]) =>
     actives.includes(active) || (actives.includes('bots') && active === 'workspace');
 
+  const native = isNativeApp();
+
   return (
-    <div className={`app-layout app-layout--light ${menuOpen ? 'app-layout--menu-open' : ''}`}>
+    <div
+      className={`app-layout app-layout--light ${native ? 'app-layout--native' : ''} ${menuOpen ? 'app-layout--menu-open' : ''}`}
+    >
       <header className="app-topbar">
         <button
           type="button"
@@ -153,7 +191,8 @@ export function AppShell({ children, active }: AppShellProps) {
             to={tab.to}
             className={`app-tabbar-item ${isTabActive(tab.actives) ? 'active' : ''}`}
           >
-            {tab.label}
+            <span className="app-tabbar-icon">{tab.icon}</span>
+            <span className="app-tabbar-label">{tab.label}</span>
           </Link>
         ))}
       </nav>

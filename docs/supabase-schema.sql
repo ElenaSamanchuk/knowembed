@@ -19,7 +19,7 @@ create table bots (
   public_id text not null unique,
   name text not null,
   welcome text not null,
-  theme_color text not null default '#1d4ed8',
+  theme_color text not null default '#5089fd',
   created_at timestamptz not null default now(),
   updated_at timestamptz not null default now()
 );

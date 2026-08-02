@@ -1,0 +1,24 @@
+{
+  "name": "KnowEmbed",
+  "short_name": "KnowEmbed",
+  "description": "Manage AI chatbots from your docs — bots, knowledge, embed, analytics",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#f4f6fa",
+  "theme_color": "#5089fd",
+  "orientation": "portrait-primary",
+  "icons": [
+    {
+      "src": "/icons/icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "/icons/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ]
+}

@@ -4,7 +4,7 @@ export const DEMO_BOT: BotConfig = {
   id: 'demo-lead-qualifier',
   name: 'Lead qualifier',
   welcome: 'Hi! I can route you to the right next step in under a minute.',
-  themeColor: '#2563eb',
+  themeColor: '#5089fd',
   startNodeId: 'welcome',
   updatedAt: '2026-07-28T00:00:00.000Z',
   nodes: [

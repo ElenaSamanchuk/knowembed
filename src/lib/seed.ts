@@ -9,7 +9,7 @@ export function ensureDemoWorkspace(email: string): void {
   updateBot(bot.id, {
     publicId: 'demo-store-assistant',
     welcome: 'Hi! Ask me about shipping, returns, pricing, or support hours.',
-    themeColor: '#1d4ed8',
+    themeColor: '#5089fd',
   });
   addDocument(bot.id, 'acme-faq.md', SAMPLE_FAQ);
 }

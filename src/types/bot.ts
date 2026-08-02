@@ -26,7 +26,7 @@ export function createEmptyBot(name = 'New bot'): BotConfig {
     id: slugify(name) || `bot-${Date.now()}`,
     name,
     welcome: 'Hi! How can we help you today?',
-    themeColor: '#2563eb',
+    themeColor: '#5089fd',
     startNodeId: startId,
     updatedAt: new Date().toISOString(),
     nodes: [

@@ -1,17 +1,20 @@
 import { Navigate, Route, Routes } from 'react-router-dom';
+import { NativeAppInit } from './components/NativeAppInit';
+import { NativeHomeRedirect } from './components/NativeHomeRedirect';
 import { AnalyticsPage } from './pages/AnalyticsPage';
 import { BotWorkspacePage } from './pages/BotWorkspacePage';
 import { CheckoutPage } from './pages/CheckoutPage';
 import { DashboardPage } from './pages/DashboardPage';
 import { DemoGuidePage } from './pages/DemoGuidePage';
-import { LandingPage } from './pages/LandingPage';
 import { SignInPage, SignUpPage } from './pages/LoginPage';
 import { PricingPage } from './pages/PricingPage';
 
 export function App() {
   return (
-    <Routes>
-      <Route path="/" element={<LandingPage />} />
+    <>
+      <NativeAppInit />
+      <Routes>
+      <Route path="/" element={<NativeHomeRedirect />} />
       <Route path="/guide" element={<DemoGuidePage />} />
       <Route path="/pricing" element={<PricingPage />} />
       <Route path="/signup" element={<SignUpPage />} />
@@ -22,5 +25,6 @@ export function App() {
       <Route path="/app/bots/:botId" element={<BotWorkspacePage />} />
       <Route path="*" element={<Navigate to="/" replace />} />
     </Routes>
+    </>
   );
 }

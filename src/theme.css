@@ -29,7 +29,8 @@
   --d-accent: #01b6ca;
   --d-accent-soft: #0b2631;
 
-  --container: min(1280px, calc(100% - 40px));
+  --content: min(1080px, calc(100% - 48px));
+  --container: var(--content);
   --ease: cubic-bezier(0.16, 1, 0.3, 1);
 }
 
@@ -259,6 +260,17 @@ body {
 .cta-band .btn-primary.cta-primary:hover {
   background: #f8fbff !important;
   color: var(--m-primary-hover) !important;
+}
+
+.cta-band .btn-ghost.cta-ghost {
+  color: #fff;
+  border-color: rgba(255, 255, 255, 0.45);
+  background: rgba(255, 255, 255, 0.08);
+}
+
+.cta-band .btn-ghost.cta-ghost:hover {
+  background: rgba(255, 255, 255, 0.14);
+  color: #fff;
 }
 
 /* ——— Light app shell (matches marketing) ——— */
@@ -841,7 +853,7 @@ html {
 }
 
 .site-footer-inner {
-  max-width: 1080px;
+  max-width: var(--content);
   margin: 0 auto 24px;
   display: grid;
   grid-template-columns: 1.2fr 1fr;
@@ -897,4 +909,260 @@ html {
 
 .site-footer-copy a {
   color: inherit;
+}
+
+/* ── Android app promo (landing) ── */
+.app-promo {
+  display: grid;
+  grid-template-columns: 1fr minmax(240px, 320px);
+  gap: 40px;
+  align-items: center;
+  max-width: var(--content);
+  margin: 0 auto 72px;
+  padding: 36px;
+  border: 1px solid var(--m-border);
+  border-radius: var(--m-radius-lg);
+  background:
+    linear-gradient(135deg, rgb(80 137 253 / 0.08), transparent 55%),
+    var(--m-bg-subtle);
+}
+
+.app-promo-lead {
+  margin-bottom: 20px;
+}
+
+.app-promo-features {
+  list-style: none;
+  margin: 0 0 24px;
+  padding: 0;
+  display: grid;
+  gap: 12px;
+}
+
+.app-promo-features li {
+  display: grid;
+  gap: 2px;
+}
+
+.app-promo-features strong {
+  font-size: 0.92rem;
+}
+
+.app-promo-features span {
+  color: var(--m-muted);
+  font-size: 0.88rem;
+}
+
+.app-promo-actions {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 10px;
+}
+
+.app-promo-download {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.app-promo-note {
+  margin: 0;
+  font-size: 0.82rem;
+}
+
+.app-promo-phone {
+  justify-self: center;
+  width: min(100%, 280px);
+  padding: 10px;
+  border-radius: 28px;
+  background: linear-gradient(160deg, #647dd7, #5089fd);
+  box-shadow: 0 20px 48px rgb(80 137 253 / 0.35);
+}
+
+.app-promo-phone-notch {
+  width: 88px;
+  height: 6px;
+  margin: 0 auto 8px;
+  border-radius: 999px;
+  background: rgb(255 255 255 / 0.35);
+}
+
+.app-promo-phone-screen {
+  border-radius: 20px;
+  background: var(--m-bg);
+  overflow: hidden;
+  min-height: 420px;
+  display: flex;
+  flex-direction: column;
+}
+
+.app-promo-phone-topbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 14px 16px;
+  border-bottom: 1px solid var(--m-border);
+  font-weight: 700;
+  font-size: 0.9rem;
+}
+
+.app-promo-phone-badge {
+  padding: 4px 8px;
+  border-radius: 999px;
+  background: var(--m-bg-subtle);
+  color: var(--m-primary);
+  font-family: var(--font-mono);
+  font-size: 0.65rem;
+  text-transform: uppercase;
+}
+
+.app-promo-phone-card {
+  margin: 14px 14px 0;
+  padding: 14px;
+  border: 1px solid var(--m-border);
+  border-radius: var(--m-radius-sm);
+  background: #fff;
+}
+
+.app-promo-phone-card--muted {
+  opacity: 0.72;
+}
+
+.app-promo-phone-label {
+  margin: 0 0 4px;
+  font-size: 0.72rem;
+  color: var(--m-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+.app-promo-phone-pill {
+  display: inline-block;
+  margin-top: 8px;
+  padding: 4px 8px;
+  border-radius: 999px;
+  background: rgb(34 197 94 / 0.12);
+  color: #15803d;
+  font-size: 0.72rem;
+  font-weight: 700;
+}
+
+.app-promo-phone-tabbar {
+  margin-top: auto;
+  display: flex;
+  padding: 10px 8px;
+  border-top: 1px solid var(--m-border);
+  background: rgb(255 255 255 / 0.94);
+}
+
+.app-promo-phone-tabbar span {
+  flex: 1;
+  text-align: center;
+  font-size: 0.68rem;
+  font-weight: 700;
+  color: var(--m-muted);
+}
+
+.app-promo-phone-tabbar span.active {
+  color: var(--m-primary);
+}
+
+@media (max-width: 860px) {
+  .app-promo {
+    grid-template-columns: 1fr;
+    padding: 24px 20px;
+  }
+
+  .app-promo-phone {
+    order: -1;
+    width: min(100%, 240px);
+  }
+}
+
+/* ── Native Android shell ── */
+.native-boot {
+  min-height: 100vh;
+  display: grid;
+  place-content: center;
+  gap: 16px;
+  text-align: center;
+  color: var(--m-muted);
+  background: var(--m-bg);
+}
+
+.native-boot-mark {
+  width: 56px;
+  height: 56px;
+  margin: 0 auto;
+  border-radius: 14px;
+  background: #5089fd;
+  box-shadow: 0 8px 24px rgb(80 137 253 / 0.35);
+}
+
+.app-layout--native {
+  grid-template-columns: 1fr;
+  grid-template-areas:
+    'topbar'
+    'main';
+  padding-bottom: calc(64px + env(safe-area-inset-bottom, 0px));
+}
+
+.app-layout--native .app-topbar,
+.app-layout--native .app-tabbar,
+.app-layout--native .app-backdrop,
+.app-layout--native .app-sidebar-close {
+  display: flex;
+}
+
+.app-layout--native .app-backdrop {
+  display: block;
+}
+
+.app-layout--native .app-sidebar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  z-index: 100;
+  width: min(300px, 88vw);
+  min-height: auto;
+  transform: translateX(-105%);
+  transition: transform 0.28s var(--ease);
+}
+
+.app-layout--native .app-sidebar.is-open {
+  transform: translateX(0);
+}
+
+.app-layout--native .app-topbar {
+  padding-top: calc(10px + env(safe-area-inset-top, 0px));
+}
+
+.app-tabbar-item {
+  flex-direction: column;
+  gap: 4px;
+}
+
+.app-tabbar-icon {
+  display: inline-flex;
+  line-height: 0;
+}
+
+.app-tabbar-label {
+  font-size: 0.68rem;
+}
+
+@media (min-width: 901px) {
+  .app-tabbar-item:not(.app-layout--native .app-tabbar-item) {
+    flex-direction: row;
+    gap: 0;
+  }
+}
+
+@media (max-width: 900px) {
+  .app-tabbar-item {
+    flex-direction: column;
+    gap: 4px;
+  }
 }

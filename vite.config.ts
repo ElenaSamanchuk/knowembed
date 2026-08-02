@@ -5,6 +5,7 @@ import react from '@vitejs/plugin-react';
 
 const ghPagesBase = '/knowembed/';
 const isGhPages = process.env.GITHUB_PAGES === 'true';
+const isCapacitor = process.env.CAPACITOR === 'true';
 
 function ghPages404(): Plugin {
   return {
@@ -19,5 +20,5 @@ function ghPages404(): Plugin {
 
 export default defineConfig({
   plugins: [react(), ghPages404()],
-  base: isGhPages ? ghPagesBase : '/',
+  base: isCapacitor ? '/' : isGhPages ? ghPagesBase : '/',
 });

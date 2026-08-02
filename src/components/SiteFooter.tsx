@@ -10,7 +10,7 @@ export function SiteFooter() {
             KnowEmbed
           </Link>
           <p className="muted">
-            Upload docs, test AI answers, embed a support widget on any site — in minutes.
+            Upload docs, test AI answers, embed a support widget on any site — in minutes
           </p>
         </div>
         <nav className="site-footer-nav" aria-label="Footer">

@@ -62,10 +62,10 @@ export function PricingPage() {
       <main className="page-shell">
         <header className="page-heading page-heading--spaced">
           <p className="eyebrow">Pricing</p>
-          <h1>Start free. Scale when embed traffic grows.</h1>
+          <h1>Start free. Scale when embed traffic grows</h1>
           <p className="lead lead--spaced">
             Every plan includes the full pipeline: upload docs, in-app chat, publish, and embed.
-            Pro upgrades through Stripe Checkout (test mode today).
+            Pro upgrades through Stripe Checkout (test mode today)
           </p>
         </header>
 
@@ -100,7 +100,7 @@ export function PricingPage() {
           <h2>Stripe test mode</h2>
           <p className="muted">
             Use test card <code>4242 4242 4242 4242</code>, any future expiry, any CVC. No real charges while
-            you evaluate the product.
+            you evaluate the product
           </p>
         </section>
 

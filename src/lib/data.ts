@@ -164,7 +164,7 @@ export async function createBot(userId: string, name: string): Promise<BotRecord
       public_id: publicId,
       name,
       welcome: `Hi! Ask me anything about ${name}.`,
-      theme_color: '#1d4ed8',
+      theme_color: '#5089fd',
     })
     .select(`
       id,
@@ -222,7 +222,7 @@ export async function ensureDemoBot(userId: string): Promise<void> {
     await updateBot(userId, bot.id, {
       publicId: 'demo-store-assistant',
       welcome: 'Hi! Ask me about shipping, returns, pricing, or support hours.',
-      themeColor: '#1d4ed8',
+      themeColor: '#5089fd',
     });
   }
 

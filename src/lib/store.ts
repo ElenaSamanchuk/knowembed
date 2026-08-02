@@ -126,7 +126,7 @@ export function createBot(name: string): BotRecord {
     publicId,
     name,
     welcome: `Hi! Ask me anything about ${name}.`,
-    themeColor: '#1d4ed8',
+    themeColor: '#5089fd',
     documents: [],
     chunks: [],
     createdAt: new Date().toISOString(),

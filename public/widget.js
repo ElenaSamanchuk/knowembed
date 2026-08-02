@@ -12,6 +12,21 @@
   }
 
   const functionsBase = apiBase.replace(/\/$/, '') + '/functions/v1';
+  const BRAND_PRIMARY = '#5089fd';
+  const BRAND_PRIMARY_HOVER = '#3d7aed';
+  const LEGACY_BLUES = { '#1d4ed8': 1, '#2563eb': 1, '#1e40af': 1, '#3b82f6': 1 };
+
+  function normalizeThemeColor(color) {
+    if (!color || typeof color !== 'string') return BRAND_PRIMARY;
+    var key = color.trim().toLowerCase();
+    if (LEGACY_BLUES[key]) return BRAND_PRIMARY;
+    return color;
+  }
+
+  function hoverColor(hex) {
+    if (hex === BRAND_PRIMARY) return BRAND_PRIMARY_HOVER;
+    return hex;
+  }
   const CHAT_ICON =
     '<svg width="24" height="24" viewBox="0 0 24 24" fill="none" aria-hidden="true">' +
     '<path d="M7 8h10M7 12h6M21 11.5c0 4.15-3.85 7.5-8.6 7.5-.96 0-1.88-.15-2.72-.43L4 20l1.2-3.36C4.43 15.4 4 13.5 4 11.5 4 7.35 7.85 4 12.6 4 17.35 4 21 7.35 21 11.5Z" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>';
@@ -41,10 +56,11 @@
     '.panel.open { display: flex; animation: knowembed-in .28s cubic-bezier(0.16,1,0.3,1); }' +
     '@keyframes knowembed-in { from { opacity: 0; transform: translateY(10px) scale(0.98); } to { opacity: 1; transform: translateY(0) scale(1); } }' +
     '@media (max-width: 480px) { .panel { right: 12px; left: 12px; width: auto; bottom: calc(16px + 56px + 12px); height: min(70dvh, 520px); } .launcher { right: 16px; bottom: 16px; } }' +
-    '.head { padding: 16px 18px; color: #fff; display: flex; justify-content: space-between; align-items: center; gap: 12px; background: #5089fd; border-bottom: 1px solid rgba(255,255,255,0.15); }' +
-    '.head strong { font-size: 0.95rem; font-weight: 700; }' +
-    '.head button { border: 0; background: rgba(255,255,255,0.2); color: #fff; width: 32px; height: 32px; border-radius: 10px; cursor: pointer; font-size: 1.2rem; line-height: 1; transition: background .15s; }' +
-    '.head button:hover { background: rgba(255,255,255,0.3); }' +
+    '.head { padding: 16px 18px; display: flex; justify-content: space-between; align-items: center; gap: 12px; background: #fff; color: #222; border-bottom: 1px solid #e4eaf5; }' +
+    '.head strong { font-size: 0.95rem; font-weight: 700; color: #222; }' +
+    '.head-sub { font-size: 12px; color: #858a9d; margin-top: 2px; }' +
+    '.head button { border: 0; background: #f4f6fa; color: #222; width: 32px; height: 32px; border-radius: 10px; cursor: pointer; font-size: 1.2rem; line-height: 1; transition: background .15s; }' +
+    '.head button:hover { background: #e4eaf5; }' +
     '.messages { flex: 1; overflow: auto; padding: 16px; background: #f4f6fa; display: flex; flex-direction: column; gap: 10px; }' +
     '.msg { max-width: 88%; padding: 10px 12px; border-radius: 14px; line-height: 1.45; font-size: 0.88rem; white-space: pre-wrap; }' +
     '.msg.bot { align-self: flex-start; background: #fff; border: 1px solid #e4eaf5; color: #222; }' +
@@ -72,7 +88,7 @@
 
   const head = document.createElement('header');
   head.className = 'head';
-  head.innerHTML = '<div><strong>Chat</strong><div style="font-size:12px;opacity:.9">AI assistant</div></div>';
+  head.innerHTML = '<div><strong>Chat</strong><div class="head-sub">AI assistant</div></div>';
 
   const closeBtn = document.createElement('button');
   closeBtn.type = 'button';
@@ -200,10 +216,16 @@
       });
     })
     .then(function (config) {
-      state.config = config;
-      launcher.style.background = config.theme_color;
-      head.style.background = config.theme_color;
-      sendBtn.style.background = config.theme_color;
+      var theme = normalizeThemeColor(config.theme_color);
+      state.config = Object.assign({}, config, { theme_color: theme });
+      launcher.style.background = theme;
+      sendBtn.style.background = theme;
+      sendBtn.onmouseenter = function () {
+        sendBtn.style.background = hoverColor(theme);
+      };
+      sendBtn.onmouseleave = function () {
+        sendBtn.style.background = theme;
+      };
       head.querySelector('strong').textContent = config.name;
       launcher.setAttribute('aria-label', 'Open ' + config.name);
       badge.hidden = !config.branding;
