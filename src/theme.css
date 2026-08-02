@@ -1077,18 +1077,20 @@ body {
     grid-template-areas:
       'topbar'
       'main';
-    padding-bottom: calc(64px + env(safe-area-inset-bottom, 0px));
+    padding-bottom: calc(52px + env(safe-area-inset-bottom, 0px));
   }
 
   .app-topbar {
     display: flex;
     grid-area: topbar;
     align-items: center;
-    gap: 12px;
+    gap: 10px;
     position: sticky;
     top: 0;
     z-index: 90;
-    padding: 10px 16px;
+    padding: 8px 12px;
+    padding-top: calc(8px + env(safe-area-inset-top, 0px));
+    min-height: 48px;
     background: rgba(255, 255, 255, 0.92);
     backdrop-filter: blur(16px);
     border-bottom: 1px solid var(--m-border);
@@ -1147,13 +1149,15 @@ body {
 
   .app-sidebar {
     position: fixed;
-    top: 0;
+    top: env(safe-area-inset-top, 0px);
     left: 0;
-    bottom: 0;
+    bottom: env(safe-area-inset-bottom, 0px);
     z-index: 100;
-    width: min(300px, 88vw);
+    width: min(280px, 92vw);
     min-height: auto;
     margin: 0;
+    padding: 16px 14px;
+    gap: 16px;
     border-right: 1px solid var(--m-border);
     box-shadow: 8px 0 32px rgba(51, 82, 143, 0.15);
     transform: translateX(-105%);
@@ -1200,27 +1204,33 @@ body {
     right: 0;
     bottom: 0;
     z-index: 80;
-    padding: 8px 12px calc(8px + env(safe-area-inset-bottom, 0px));
+    padding: 4px 8px calc(4px + env(safe-area-inset-bottom, 0px));
     background: rgba(255, 255, 255, 0.94);
     backdrop-filter: blur(16px);
     border-top: 1px solid var(--m-border);
     box-shadow: 0 -4px 20px rgba(51, 82, 143, 0.08);
-    gap: 6px;
+    gap: 4px;
   }
 
   .app-tabbar-item {
     flex: 1;
     display: flex;
+    flex-direction: column;
     align-items: center;
     justify-content: center;
-    min-height: 44px;
-    padding: 8px 10px;
+    min-height: 40px;
+    padding: 4px 6px;
+    gap: 2px;
     border-radius: var(--m-radius-sm);
     text-decoration: none;
-    font-size: 0.78rem;
+    font-size: 0.62rem;
     font-weight: 700;
     color: var(--m-muted);
     transition: background 0.2s var(--ease), color 0.2s var(--ease);
+  }
+
+  .app-tabbar-label {
+    font-size: 0.62rem;
   }
 
   .app-tabbar-item.active {
@@ -1235,14 +1245,39 @@ body {
   .page-heading.inline {
     flex-direction: column;
     align-items: stretch;
+    gap: 12px;
+    margin-bottom: 16px;
+  }
+
+  .page-heading.inline h1 {
+    font-size: clamp(1.5rem, 6vw, 1.85rem);
+    margin-bottom: 0;
+  }
+
+  .page-heading.inline .btn {
+    width: 100%;
+    justify-content: center;
   }
 
   .page-heading.inline .toolbar {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
     width: 100%;
   }
 
   .page-heading.inline .toolbar .btn {
-    flex: 1;
+    flex: 1 1 calc(50% - 4px);
+    min-width: 0;
+  }
+
+  .app-nav {
+    gap: 4px;
+  }
+
+  .app-nav-item {
+    padding: 8px 10px;
+    font-size: 0.84rem;
   }
 }
 
@@ -1836,7 +1871,7 @@ html {
   grid-template-areas:
     'topbar'
     'main';
-  padding-bottom: calc(64px + env(safe-area-inset-bottom, 0px));
+  padding-bottom: calc(52px + env(safe-area-inset-bottom, 0px));
 }
 
 .app-layout--native .app-topbar,
@@ -1851,12 +1886,14 @@ html {
 
 .app-layout--native .app-sidebar {
   position: fixed;
-  top: 0;
+  top: env(safe-area-inset-top, 0px);
   left: 0;
-  bottom: 0;
+  bottom: env(safe-area-inset-bottom, 0px);
   z-index: 100;
-  width: min(320px, calc(100vw - 32px));
+  width: min(280px, calc(100vw - 24px));
   min-height: auto;
+  padding: 16px 14px;
+  gap: 16px;
   transform: translateX(-105%);
   transition: transform 0.28s var(--ease);
 }

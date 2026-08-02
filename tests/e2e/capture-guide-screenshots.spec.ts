@@ -21,15 +21,49 @@ async function shot(page: Page, fileName: string) {
   });
 }
 
-async function signIn(page: Page) {
-  if (!email || !password) {
-    throw new Error('Set TEST_USER_EMAIL and TEST_USER_PASSWORD for authenticated screenshots');
+async function openBotWorkspace(page: Page) {
+  const storeLink = page.getByRole('link', { name: /Store Assistant/i });
+  if (await storeLink.isVisible().catch(() => false)) {
+    await storeLink.click();
+    return;
   }
-  await page.goto('/login');
-  await page.getByLabel('Work email').fill(email);
-  await page.getByLabel('Password').fill(password);
-  await page.getByRole('button', { name: 'Sign in' }).click();
-  await expect(page).toHaveURL(/\/app/, { timeout: 20_000 });
+
+  const createBtn = page.getByRole('button', { name: /Create first bot|New chatbot/i }).first();
+  await createBtn.click();
+  await expect(page).toHaveURL(/\/app\/bots\//, { timeout: 20_000 });
+}
+
+async function ensureKnowledgeReady(page: Page) {
+  const faq = page.getByText('acme-faq.md');
+  if (await faq.isVisible().catch(() => false)) return;
+
+  const reindex = page.getByRole('button', { name: /Re-index demo FAQ/i });
+  if (await reindex.isVisible().catch(() => false)) {
+    await reindex.click();
+    await expect(faq).toBeVisible({ timeout: 90_000 });
+    return;
+  }
+
+  throw new Error('Could not prepare knowledge docs for screenshot');
+}
+
+async function signIn(page: Page) {
+  if (email && password) {
+    await page.goto('/login');
+    await page.getByLabel('Work email').fill(email);
+    await page.getByLabel('Password').fill(password);
+    await page.getByRole('button', { name: 'Sign in' }).click();
+    await expect(page).toHaveURL(/\/app/, { timeout: 20_000 });
+    return;
+  }
+
+  const guestEmail = `knowembed-guide-${Date.now()}@example.com`;
+  const guestPassword = 'KnowEmbedShot1!';
+  await page.goto('/signup');
+  await page.getByLabel('Work email').fill(guestEmail);
+  await page.getByLabel('Password').fill(guestPassword);
+  await page.getByRole('button', { name: 'Create account' }).click();
+  await expect(page).toHaveURL(/\/app/, { timeout: 45_000 });
 }
 
 test('capture demo guide screenshots', async ({ page }) => {
@@ -44,10 +78,9 @@ test('capture demo guide screenshots', async ({ page }) => {
   await shot(page, '02-signup.png');
 
   await signIn(page);
-  await page.getByRole('link', { name: /Store Assistant/i }).click();
-  await expect(page.getByRole('heading', { level: 1, name: 'Store Assistant' })).toBeVisible();
-
-  await expect(page.getByText('acme-faq.md')).toBeVisible({ timeout: 15_000 });
+  await openBotWorkspace(page);
+  await expect(page.getByRole('heading', { level: 1 })).toBeVisible({ timeout: 15_000 });
+  await ensureKnowledgeReady(page);
   await shot(page, '03-knowledge.png');
 
   const chatInput = page.getByPlaceholder('Ask about pricing, shipping, returns…');
