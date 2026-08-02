@@ -14,7 +14,7 @@ test.describe('Marketing pages', () => {
   test('landing shows hero, features, and pricing CTA', async ({ page }) => {
     await page.goto('/');
     await expect(page.getByRole('heading', { level: 1 })).toContainText('embed');
-    await expect(page.getByText('Supabase')).toBeVisible();
+    await expect(page.getByLabel('Tech stack').getByText('Supabase')).toBeVisible();
     await expect(page.getByRole('link', { name: 'View pricing' })).toBeVisible();
     await expect(page.getByRole('link', { name: 'Ship your first bot' }).first()).toBeVisible();
   });
