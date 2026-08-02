@@ -1,95 +1,93 @@
-# KnowEmbed — Demo Guide
+# KnowEmbed — User Guide
 
-Written walkthrough with screenshots for review and portfolio. Live app: [knowembed.vercel.app](https://knowembed.vercel.app/) · [GitHub Pages](https://elenasamanchuk.github.io/knowembed/)
+How to use the app from sign-up to a live embed on your site.
 
-## Stack
+Live app: [knowembed.vercel.app](https://knowembed.vercel.app/) · [GitHub Pages](https://elenasamanchuk.github.io/knowembed/)
 
-Supabase Auth + Postgres · Edge Functions · Groq LLM · Stripe Checkout · React · Shadow DOM widget · PDF ingest · pgvector · analytics
+## Before you start
 
----
-
-## Step 1 — Landing & pricing
-
-Open the marketing site. Review hero, use cases, FAQ accordion, and Starter / Pro plans.
-
-**Expected:** Clear value prop; Sign in → `/login`, Start free → `/signup`, Pricing works.
-
-![Landing](public/docs/screenshots/01-landing.png)
+- Free **Starter** plan — no credit card
+- 1 bot, up to 3 documents, 50 AI answers per month
+- Demo bot **Store Assistant** is created when you sign up
 
 ---
 
-## Step 2 — Create account
+## Step 1 — Create your account
 
-Go to `/signup`. Register with email + password (min 6 chars). Supabase auth creates your profile.
+Go to **Sign up**, enter email and password (min 6 characters), click **Create account**.
 
-**Expected:** Redirect to Dashboard with seeded **Store Assistant** bot.
+**You should see:** Dashboard with a ready-made **Store Assistant** bot.
 
 ![Sign up](public/docs/screenshots/02-signup.png)
 
 ---
 
-## Step 3 — Index knowledge
+## Step 2 — Add knowledge to your bot
 
-Open **Store Assistant**. If chat is locked, click **Re-index demo FAQ**. Confirm `acme-faq.md` is indexed.
+Open **Store Assistant**. Upload `.txt`, `.md`, or PDF — or click **Re-index demo FAQ** for the sample store FAQ.
 
-**Expected:** Chunks stored in Postgres; chat input enabled.
+**You should see:** Documents in the list and an active chat input.
 
 ![Knowledge](public/docs/screenshots/03-knowledge.png)
 
 ---
 
-## Step 4 — Test in-app chat
+## Step 3 — Test answers in the app
 
-Ask:
+In **Test chat**, ask questions your customers would ask:
 
 - “How long is shipping?”
 - “What is the return policy?”
 
-**Expected:** Groq answers from FAQ context (3–5 business days shipping, 30-day returns).
+**You should see:** Answers based on your uploaded content.
 
 ![Chat](public/docs/screenshots/04-chat.png)
 
 ---
 
-## Step 5 — Publish bot
+## Step 4 — Customize and publish
 
-Click **Publish bot**. Copy embed snippet from workspace.
+Set name, welcome message, and theme color in **Settings**. Click **Publish bot**, then **Copy embed**.
 
-**Expected:** `public_id` `demo-store-assistant` available for widget.
+**You should see:** A public bot id and a script snippet for your site.
 
 ![Publish](public/docs/screenshots/05-publish.png)
 
 ---
 
-## Step 6 — Embed widget
+## Step 5 — Embed on your site
 
-Open `/embed-demo.html` — chat launcher bottom-right on a Still-style store page.
+Paste the snippet before `</body>`. Preview on [embed demo](https://knowembed.vercel.app/embed-demo.html) — launcher bottom-right.
 
-**Expected:** Same answers as in-app; **Powered by KnowEmbed** badge on Starter plan.
+**You should see:** Same answers as in the app; KnowEmbed badge on Starter.
 
 ![Embed](public/docs/screenshots/06-embed.png)
 
 ---
 
-## Step 7 — Upgrade with Stripe
+## Step 6 — Track usage and upgrade
 
-Pricing → **Upgrade to Pro** → Stripe Checkout (test card `4242 4242 4242 4242`).
+Open **Analytics** for question stats. On **Pricing**, upgrade to **Pro** for more bots, docs, and white-label widget.
 
-**Expected:** Webhook sets `plan = pro` in DB; higher limits; widget branding removed after re-publish.
+**You should see:** Stripe Checkout (test card `4242 4242 4242 4242`) and higher limits after upgrade.
 
 ![Stripe](public/docs/screenshots/07-stripe.png)
 
 ---
 
-## Portfolio angle
+## Troubleshooting
 
-Position as **full-stack MVP**: backend (Supabase + Edge Functions), AI (RAG + Groq), payments (Stripe webhooks), embeddable widget, PDF ingest, pgvector search, analytics dashboard.
+| Issue | What to do |
+|-------|------------|
+| Chat input disabled | Index docs first, or click **Re-index demo FAQ** |
+| Monthly limit reached | Upgrade to Pro on Pricing, or wait for next billing cycle |
+| Widget not loading | Publish the bot first; check the script tag on your page |
 
-## Links
+## Quick links
 
-| Resource | URL |
-|----------|-----|
-| Live demo | https://knowembed.vercel.app/ |
-| Embed demo | https://knowembed.vercel.app/embed-demo.html |
-| Case study | https://knowembed.vercel.app/case.html |
-| Repository | https://github.com/ElenaSamanchuk/knowembed |
+| Page | URL |
+|------|-----|
+| Sign up | /signup |
+| Dashboard | /app |
+| Pricing | /pricing |
+| Embed demo | /embed-demo.html |

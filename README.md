@@ -1,10 +1,10 @@
 # KnowEmbed — Embeddable Chatbot Builder
 
-MVP for [Paralect Product Academy](https://www.paralect.com/academy/product-manager/projects/chatbot-builder).
+Turn company docs into an embeddable AI support widget — upload, test, publish, embed.
 
 **Live:** https://elenasamanchuk.github.io/knowembed/  
 **Embed demo:** https://elenasamanchuk.github.io/knowembed/embed-demo.html  
-**Written demo guide:** [docs/GUIDE.md](./docs/GUIDE.md) · [online /guide](https://elenasamanchuk.github.io/knowembed/guide)
+**User guide:** [docs/GUIDE.md](./docs/GUIDE.md) · [online /guide](https://elenasamanchuk.github.io/knowembed/guide)
 
 ## Features
 
@@ -33,10 +33,6 @@ npm run test:all
 ```
 
 Optional live E2E: copy `.env.test.example` → set credentials → `npm run test:e2e`
-
-## Submit to Paralect
-
-[docs/SUBMISSION.md](./docs/SUBMISSION.md)
 
 ## Repo
 

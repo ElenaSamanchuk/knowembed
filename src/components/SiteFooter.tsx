@@ -17,7 +17,7 @@ export function SiteFooter() {
           <div>
             <p className="footer-label">Product</p>
             <Link to="/pricing">Pricing</Link>
-            <Link to="/guide">Demo guide</Link>
+            <Link to="/guide">User guide</Link>
             <a href={publicPath('embed-demo.html')}>Live embed demo</a>
           </div>
           <div>

@@ -202,12 +202,12 @@ export function LandingPage() {
 
         <Reveal delay={240}>
           <section className="cta-band">
-            <h2>See the full flow — with screenshots</h2>
-            <p>Written walkthrough from sign-up to live embed and Stripe upgrade. No video required</p>
-            <div className="hero-actions cta-band-actions">
-              <Link to="/guide" className="btn btn-ghost btn-lg cta-ghost">
-                Read demo guide
-              </Link>
+          <h2>See how it works — step by step</h2>
+          <p>User guide with screenshots: sign up, upload docs, test chat, embed, and upgrade</p>
+          <div className="hero-actions cta-band-actions">
+            <Link to="/guide" className="btn btn-ghost btn-lg cta-ghost">
+              Read user guide
+            </Link>
               <Link to="/signup" className="btn btn-primary btn-lg cta-primary">
                 Create account
               </Link>

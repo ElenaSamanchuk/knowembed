@@ -20,7 +20,7 @@ export function SiteHeader() {
             Pricing
           </Link>
           <Link to="/guide" className={navClass('/guide')} aria-current={navClass('/guide') ? 'page' : undefined}>
-            Demo guide
+            User guide
           </Link>
           <a
             href={publicPath('embed-demo.html')}

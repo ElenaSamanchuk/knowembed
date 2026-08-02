@@ -23,18 +23,18 @@ export function FaqAccordion({ items }: { items: FaqItem[] }) {
               onClick={() => setOpenIndex(isOpen ? null : index)}
             >
               <span>{item.q}</span>
-              <span className="faq-accordion-icon" aria-hidden="true">
-                {isOpen ? '−' : '+'}
-              </span>
+              <span className="faq-accordion-icon" aria-hidden="true" />
             </button>
             <div
               id={panelId}
               role="region"
               aria-labelledby={buttonId}
-              className="faq-accordion-panel"
-              hidden={!isOpen}
+              className="faq-accordion-panel-wrap"
+              aria-hidden={!isOpen}
             >
-              <p className="muted">{item.a}</p>
+              <div className="faq-accordion-panel-inner">
+                <p className="muted">{item.a}</p>
+              </div>
             </div>
           </article>
         );
