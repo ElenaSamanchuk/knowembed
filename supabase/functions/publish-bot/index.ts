@@ -29,7 +29,7 @@ Deno.serve(async (req) => {
 
     const { data: bot, error: botError } = await serviceClient
       .from('bots')
-      .select('id, public_id, name, welcome, theme_color, owner_id')
+      .select('id, public_id, name, welcome, theme_color, system_prompt, owner_id')
       .eq('id', botId)
       .eq('owner_id', authData.user.id)
       .single();
@@ -67,6 +67,7 @@ Deno.serve(async (req) => {
       name: bot.name,
       welcome: bot.welcome,
       theme_color: bot.theme_color,
+      system_prompt: bot.system_prompt ?? null,
       branding,
       published_at: new Date().toISOString(),
     });

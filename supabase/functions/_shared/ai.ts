@@ -228,24 +228,33 @@ export async function answerWithContext(
   question: string,
   botName: string,
   contextBlocks: string[],
+  customSystemPrompt?: string | null,
 ): Promise<string> {
   const groqKey = Deno.env.get('GROQ_API_KEY');
   const geminiKey = Deno.env.get('GEMINI_API_KEY');
   const openaiKey = Deno.env.get('OPENAI_API_KEY');
 
   if (!contextBlocks.length) {
+    if (customSystemPrompt?.includes('русск')) {
+      return `Пока не нашла ответ в базе знаний ${botName}. Оставьте заявку на сайте или напишите менеджеру — поможем с подбором комплекта.`;
+    }
     return `I couldn't find this in ${botName}'s knowledge base yet. Upload FAQ or product docs and try again.`;
   }
 
   const context = contextBlocks.join('\n\n---\n\n');
-  const systemPrompt =
+  const defaultSystemPrompt =
     `You are ${botName}'s knowledgeable AI support assistant. Answer using ONLY the provided context.\n` +
     '- Be conversational, helpful, and precise — like a smart support agent who read the docs\n' +
     '- For multi-part questions, address each part in order\n' +
     '- If the exact answer is not in context, say what related info you do have and suggest contacting support\n' +
     '- Never invent prices, dates, policies, or product details not stated in the context\n' +
     '- Keep answers concise (2–5 sentences) unless the user asks for detail';
-  const userPrompt = `Context from knowledge base:\n${context}\n\nCustomer question: ${question}\n\nAnswer:`;
+  const systemPrompt = customSystemPrompt?.trim()
+    ? `${customSystemPrompt.trim()}\n\nUse ONLY this knowledge base context:\n`
+    : defaultSystemPrompt;
+  const userPrompt = customSystemPrompt?.trim()
+    ? `Контекст из базы знаний:\n${context}\n\nВопрос клиента: ${question}\n\nОтвет:`
+    : `Context from knowledge base:\n${context}\n\nCustomer question: ${question}\n\nAnswer:`;
 
   if (groqKey) {
     return answerWithGroq(groqKey, systemPrompt, userPrompt);

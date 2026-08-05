@@ -21,7 +21,7 @@ Deno.serve(async (req) => {
 
     const { data: published, error: publishedError } = await serviceClient
       .from('published_bots')
-      .select('bot_id, name, bots(owner_id)')
+      .select('bot_id, name, system_prompt, bots(owner_id)')
       .eq('public_id', publicId)
       .single();
 
@@ -33,9 +33,12 @@ Deno.serve(async (req) => {
     }
 
     const contextBlocks = await findRelevantChunks(serviceClient, published.bot_id, message, 5);
+    const systemPrompt = (published as { system_prompt?: string | null }).system_prompt ?? null;
     const answer = contextBlocks.length
-      ? await answerWithContext(message, published.name, contextBlocks)
-      : `I couldn't find this in ${published.name}'s knowledge base yet.`;
+      ? await answerWithContext(message, published.name, contextBlocks, systemPrompt)
+      : systemPrompt?.includes('русск')
+        ? `Пока не нашла ответ в базе знаний. Оставьте заявку на сайте smlogik.ru или напишите менеджеру — поможем с подбором комплекта.`
+        : `I couldn't find this in ${published.name}'s knowledge base yet.`;
 
     const ownerId = (published.bots as { owner_id?: string } | null)?.owner_id;
     if (ownerId) {
